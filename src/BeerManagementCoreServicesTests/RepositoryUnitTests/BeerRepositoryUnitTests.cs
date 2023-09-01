@@ -64,7 +64,7 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
             Assert.True(getBeerDetailsByAlcoholPercentage.Count() > 0);
             Assert.True(getBeerDetailsByAlcoholPercentage[0].PercentageAlcoholByVolume > 10);
             Assert.True(getBeerDetailsByAlcoholPercentage[1].PercentageAlcoholByVolume > 10);
-            Assert.True(getBeerDetailsByAlcoholPercentage[2].PercentageAlcoholByVolume > 40);
+            Assert.True(getBeerDetailsByAlcoholPercentage[2].PercentageAlcoholByVolume < 40);
         }
         [Fact]
         public void GetAllBeersByAlchoholPercentage_With_Optional_Values_Repository()
