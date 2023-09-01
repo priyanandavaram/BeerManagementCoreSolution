@@ -4,7 +4,6 @@ using BeerManagementCoreServices.Common;
 using System.Linq;
 using Xunit;
 
-
 namespace BeerManagementCoreServicesTests.GenericServiceUnitTests
 {
     [Collection("BeerManagementDatabaseContextCollection")]
@@ -79,9 +78,9 @@ namespace BeerManagementCoreServicesTests.GenericServiceUnitTests
         [Fact]
         public void SaveNewRecord_Service()
         {
-            var newBreweryRecord = new Bars { BarId = 6, BarName = "Fish Bar", BarAddress = "Manchester" };
+            var newBarRecord = new Bars { BarId = 6, BarName = "Fish Bar", BarAddress = "Manchester" };
 
-            var getResult = _service.SaveNewRecord(newBreweryRecord);
+            var getResult = _service.SaveNewRecord(newBarRecord);
 
             Bars data = _bmsContext.Bars.FirstOrDefault(b => b.BarId == 6);
 

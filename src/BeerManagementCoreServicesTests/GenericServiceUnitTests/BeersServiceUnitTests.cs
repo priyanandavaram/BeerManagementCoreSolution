@@ -4,7 +4,6 @@ using BeerManagementCoreServicesTests.Common;
 using System.Linq;
 using Xunit;
 
-
 namespace BeerManagementCoreServicesTests.GenericServiceUnitTests
 {
     [Collection("BeerManagementDatabaseContextCollection")]
