@@ -1,7 +1,6 @@
 ﻿using BeerManagementCoreServices.Database;
 using System.Collections.Generic;
 
-
 namespace BeerManagementCoreServices.Interfaces
 {
     public interface IBeerRepository

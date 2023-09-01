@@ -40,7 +40,7 @@ namespace BeerManagementCoreServicesTests.ControllerUnitTests
 
             _barRepository.Setup(x => x.GetBarDetailsById(10)).Returns(barDetails.ElementAtOrDefault(9));
 
-            var getbarDetailsById = _barController.GetBarDetailsById(30);
+            var getbarDetailsById = _barController.GetBarDetailsById(10);
 
             Assert.Null(getbarDetailsById);
         }
@@ -66,7 +66,7 @@ namespace BeerManagementCoreServicesTests.ControllerUnitTests
 
             var getResult = _barController.UpdateBarDetails(2, updateRecord);
 
-            Assert.Equal(getResult, Constants.updateOperation);
+            Assert.True(getResult == Constants.updateOperation);
         }
         [Fact]
         public void UpdateBarDetails_ValidationFail_BarName_Already_Exists_Controller()
@@ -77,7 +77,7 @@ namespace BeerManagementCoreServicesTests.ControllerUnitTests
 
             var getResult = _barController.UpdateBarDetails(1, updateRecord);
 
-            Assert.Equal(getResult, Constants.nameExists);
+            Assert.True(getResult == Constants.nameExists);
         }
         [Fact]
         public void UpdateBarDetails_ValidationFail_Id_Not_Found_Controller()
@@ -88,29 +88,29 @@ namespace BeerManagementCoreServicesTests.ControllerUnitTests
 
             var getResult = _barController.UpdateBarDetails(10, updateRecord);
 
-            Assert.Equal(getResult, Constants.notFound);
+            Assert.True(getResult == Constants.notFound);
         }
         [Fact]
         public void SaveNewBarDetails_Success_Controller()
         {
-            var newRecord = new Bars { BarId = 7, BarName = "Hilife Bar & Pub", BarAddress = "Leeds High Street" };
+            var newRecord = new Bars { BarId = 6, BarName = "Hilife Bar & Pub", BarAddress = "Leeds High Street" };
 
             _barRepository.Setup(x => x.SaveNewBarDetails(newRecord)).Returns(Constants.createOperation);
 
             var getResult = _barController.SaveNewBarDetails(newRecord);
 
-            Assert.Equal(getResult, Constants.createOperation);
+            Assert.True(getResult == Constants.createOperation);
         }
         [Fact]
-        public void SaveNewBreweryDetails_ValidationFail_BreweryName_Already_Exists_Controller()
+        public void SaveNewBarDetails_ValidationFail_BarName_Already_Exists_Controller()
         {
-            var newRecord = new Bars { BarId = 8, BarName = "United club Bar", BarAddress = "Leeds High Street" };
+            var newRecord = new Bars { BarId = 7, BarName = "United club Bar", BarAddress = "Leeds High Street" };
 
             _barRepository.Setup(x => x.SaveNewBarDetails(newRecord)).Returns(Constants.nameExists);
 
             var getResult = _barController.SaveNewBarDetails(newRecord);
 
-            Assert.Equal(getResult, Constants.nameExists);
+            Assert.True(getResult == Constants.nameExists);
         }
         private List<Bars> GetBarDetails()
         {

@@ -65,7 +65,7 @@ namespace BeerManagementCoreServicesTests.ControllerUnitTests
 
             var getResult = _breweryController.UpdateBreweryDetails(2, updateRecord);
 
-            Assert.Equal(getResult, Constants.updateOperation);
+            Assert.True(getResult == Constants.updateOperation);
         }
         [Fact]
         public void UpdateBreweryDetails_ValidationFail_BreweryName_Already_Exists_Controller()
@@ -76,34 +76,34 @@ namespace BeerManagementCoreServicesTests.ControllerUnitTests
 
             var getResult = _breweryController.UpdateBreweryDetails(3, updateRecord);
 
-            Assert.Equal(getResult, Constants.nameExists);
+            Assert.True(getResult == Constants.nameExists);
         }
         [Fact]
         public void UpdateBreweryDetails_ValidationFail_Id_Not_Found_Controller()
         {
-            var updateRecord = new Brewery { BreweryId = 8, BreweryName = "test" };
+            var updateRecord = new Brewery { BreweryId = 10, BreweryName = "test" };
 
             _breweryRepository.Setup(x => x.UpdateBreweryDetails(updateRecord)).Returns(Constants.notFound);
 
-            var getResult = _breweryController.UpdateBreweryDetails(4, updateRecord);
+            var getResult = _breweryController.UpdateBreweryDetails(10, updateRecord);
 
-            Assert.Equal(getResult, Constants.notFound);
+            Assert.True(getResult == Constants.notFound);
         }
         [Fact]
         public void SaveNewBreweryDetails_Success_Controller()
         {
-            var newRecord = new Brewery { BreweryId = 7, BreweryName = "Mexical Beverage" };
+            var newRecord = new Brewery { BreweryId = 6, BreweryName = "Mexical Beverage" };
 
             _breweryRepository.Setup(x => x.SaveNewBreweryDetails(newRecord)).Returns(Constants.createOperation);
 
             var getResult = _breweryController.SaveNewBreweryDetails(newRecord);
 
-            Assert.Equal(getResult, Constants.createOperation);
+            Assert.True(getResult == Constants.createOperation);
         }
         [Fact]
         public void SaveNewBreweryDetails_ValidationFail_BreweryName_Exists_Controller()
         {
-            var newRecord = new Brewery { BreweryId = 6, BreweryName = "United Beverages-Dallas" };
+            var newRecord = new Brewery { BreweryId = 7, BreweryName = "United Beverages-Dallas" };
 
             _breweryRepository.Setup(x => x.SaveNewBreweryDetails(newRecord)).Returns(Constants.nameExists);
 
@@ -111,7 +111,7 @@ namespace BeerManagementCoreServicesTests.ControllerUnitTests
 
             var getResult = breweryController.SaveNewBreweryDetails(newRecord);
 
-            Assert.Equal(getResult, Constants.nameExists);
+            Assert.True(getResult == Constants.nameExists);
         }
         
         private List<Brewery> GetBreweryDetails()

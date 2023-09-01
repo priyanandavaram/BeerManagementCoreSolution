@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BeerManagementCoreServices.Database;
 
 namespace BeerManagementCoreServices.Interfaces
 {

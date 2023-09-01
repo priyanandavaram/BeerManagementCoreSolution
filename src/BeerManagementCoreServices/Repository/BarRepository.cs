@@ -4,7 +4,6 @@ using BeerManagementCoreServices.Common;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace BeerManagementCoreServices.Repository
 {
     public class BarRepository : IBarRepository

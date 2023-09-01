@@ -34,11 +34,25 @@ namespace BeerManagementCoreServicesTests.Controllers
             Assert.True(getResult == Constants.linkOperation);
         }
         [Fact]
-        public void LinkBreweryAndBeer_ValidationFail_Id_Not_Found_Controller()
+        public void LinkBreweryAndBeer_ValidationFail_BeerId_Not_Found_Controller()
         {
             LinkBreweryWithBeer bb = new LinkBreweryWithBeer();
-            bb.BreweryId = 6;
-            bb.BeerId =8;
+            bb.BreweryId = 1;
+            bb.BeerId = 8;
+
+            _linkBreweryAndBeerRepository.Setup(x => x.LinkBreweryAndBeer(bb)).Returns(Constants.notFound);
+
+            var getResult = _linkBreweryWithBeerController.LinkBreweryAndBeer(bb);
+
+            Assert.NotNull(getResult);
+            Assert.True(getResult == Constants.notFound);
+        }
+        [Fact]
+        public void LinkBreweryAndBeer_ValidationFail_BreweryId_Not_Found_Controller()
+        {
+            LinkBreweryWithBeer bb = new LinkBreweryWithBeer();
+            bb.BreweryId = 10;
+            bb.BeerId = 4;
 
             _linkBreweryAndBeerRepository.Setup(x => x.LinkBreweryAndBeer(bb)).Returns(Constants.notFound);
 

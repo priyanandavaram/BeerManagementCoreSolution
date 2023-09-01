@@ -86,7 +86,7 @@ namespace BeerManagementCoreServicesTests
 
             var getResult = _beerController.UpdateBeerDetails(2, updateRecord);
 
-            Assert.Equal(getResult, Constants.updateOperation);          
+            Assert.True(getResult == Constants.updateOperation);          
         }
         [Fact]
         public void UpdateBeerDetails_ValidationFail_BeerName_Already_Exists_Controller()
@@ -95,9 +95,9 @@ namespace BeerManagementCoreServicesTests
 
             _beerRepository.Setup(x => x.UpdateBeerDetails(updateRecord)).Returns(Constants.nameExists);
 
-            var getResult = _beerController.UpdateBeerDetails(1, updateRecord);
+            var getResult = _beerController.UpdateBeerDetails(3, updateRecord);
 
-            Assert.Equal(getResult, Constants.nameExists);
+            Assert.True(getResult == Constants.nameExists);
         }
         [Fact]
         public void UpdateBeerDetails_ValidationFail_Id_NotFound_Controller()
@@ -108,7 +108,7 @@ namespace BeerManagementCoreServicesTests
 
             var getResult = _beerController.UpdateBeerDetails(10, updateRecord);
 
-            Assert.Equal(getResult, Constants.notFound);
+            Assert.True(getResult == Constants.notFound);
         }
         [Fact]
         public void SaveNewBeerDetails_Success_Controller()
@@ -119,10 +119,10 @@ namespace BeerManagementCoreServicesTests
 
             var getResult = _beerController.SaveNewBeerDetails(newRecord);
 
-            Assert.Equal(getResult, Constants.createOperation);
+            Assert.True(getResult == Constants.createOperation);
         }
         [Fact]
-        public void SaveNewBeerDetails_ValidationFail_Name_Exists_Controller()
+        public void SaveNewBeerDetails_ValidationFail_BeerName_Exists_Controller()
         {
             var newRecord = new Beers { BeerId = 8, BeerName = "Budweiser", PercentageAlcoholByVolume = 0.08M };
 
@@ -130,7 +130,7 @@ namespace BeerManagementCoreServicesTests
 
             var getResult = _beerController.SaveNewBeerDetails(newRecord);
 
-            Assert.Equal(getResult, Constants.nameExists);
+            Assert.True(getResult == Constants.nameExists);
         }
         private List<Beers> GetBeerDetails()
         {
