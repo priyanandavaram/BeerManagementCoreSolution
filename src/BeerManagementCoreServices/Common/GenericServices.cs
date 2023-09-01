@@ -1,9 +1,8 @@
 ﻿using BeerManagementCoreServices.Interfaces;
 using BeerManagementCoreServices.Database;
-using BeerManagementCoreServices.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 
 namespace BeerManagementCoreServices.Common
