@@ -6,7 +6,6 @@ using BeerManagementCoreServices.Common;
 using Xunit;
 using Moq;
 
-
 namespace BeerManagementCoreServicesTests.RepositoryUnitTests
 {
     [Collection("BeerManagementDatabaseContextCollection")]

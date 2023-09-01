@@ -64,6 +64,7 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
             var getAllBarDetails = _barRepository.GetAllBars();
 
             Assert.NotNull(getAllBarDetails);
+            Assert.Equal(getAllBarDetails, barDetails);
             Assert.True(getAllBarDetails.Count() == 5);
         }
         [Fact]
@@ -79,9 +80,9 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
             Assert.True(getResult == Constants.updateOperation);
         }
         [Fact]
-        public void UpdateBarDetails_ValidationFail_BreweryName_Already_Exists_Repository()
+        public void UpdateBarDetails_ValidationFail_BarName_Already_Exists_Repository()
         {
-            var updateRecord = new Bars { BarId = 1, BarName = "London Bar & Pub", BarAddress = "Leeds Met Hotel" };
+            var updateRecord = new Bars { BarId = 1, BarName = "Metropolitan Bar", BarAddress = "Leeds Met Hotel" };
 
             _genericRepo.Setup(x => x.UpdateEntityRecord(updateRecord, 1)).Returns(Constants.nameExists);
 
@@ -105,7 +106,7 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
         [Fact]
         public void SaveNewBarDetails_Success_Repository()
         {
-            var newRecord = new Bars { BarId = 7, BarName = "Hilife Bar & Pub", BarAddress = "Leeds High Street" };
+            var newRecord = new Bars { BarId = 6, BarName = "Hilife Bar & Pub", BarAddress = "Leeds High Street" };
 
             _genericRepo.Setup(x => x.SaveNewRecord(newRecord)).Returns(Constants.createOperation);
 
@@ -115,9 +116,9 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
             Assert.True(getResult == Constants.createOperation);
         }
         [Fact]
-        public void SaveNewBreweryDetails_ValidationFail_BreweryName_Exists_Repository()
+        public void SaveNewBarDetails_ValidationFail_BarName_Exists_Repository()
         {
-            var newRecord = new Bars { BarId = 8, BarName = "United club Bar", BarAddress = "Leeds High Street" };
+            var newRecord = new Bars { BarId = 7, BarName = "United club Bar", BarAddress = "Leeds High Street" };
 
             _genericRepo.Setup(x => x.SaveNewRecord(newRecord)).Returns(Constants.nameExists);
 

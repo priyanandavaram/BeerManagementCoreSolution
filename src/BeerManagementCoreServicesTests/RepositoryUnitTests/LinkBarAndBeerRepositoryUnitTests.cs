@@ -30,13 +30,13 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
             _linkBarAndBeerRepository = new LinkBarAndBeerRepository(_bmsContext, _genericRepo.Object);
         }
         [Fact]
-        public void LinkBreweryAndBeer_Success_Repository()
+        public void LinkBarAndBeer_Success_Repository()
         {
             LinkBarWithBeer bb = new LinkBarWithBeer();
             bb.BarId = 1;
             bb.BeerId = 4;
 
-            _genericRepo.Setup(x => x.LinkBreweryWithBeer(bb.BarId, bb.BeerId)).Returns(Constants.linkOperation);
+            _genericRepo.Setup(x => x.LinkBarWithBeer(bb.BarId, bb.BeerId)).Returns(Constants.linkOperation);
 
             var getResult = _linkBarAndBeerRepository.LinkBarAndBeer(bb);
 
@@ -44,13 +44,13 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
             Assert.True(getResult == Constants.linkOperation);
         }
         [Fact]
-        public void LinkBreweryAndBeer_ValidationFail_Id_Not_Found_Repository()
+        public void LinkBarAndBeer_ValidationFail_Id_Not_Found_Repository()
         {
             LinkBarWithBeer bb = new LinkBarWithBeer();
             bb.BarId = 6;
             bb.BeerId = 8;
 
-            _genericRepo.Setup(x => x.LinkBreweryWithBeer(bb.BarId, bb.BeerId)).Returns(Constants.notFound);
+            _genericRepo.Setup(x => x.LinkBarWithBeer(bb.BarId, bb.BeerId)).Returns(Constants.notFound);
 
             var getResult = _linkBarAndBeerRepository.LinkBarAndBeer(bb);
 

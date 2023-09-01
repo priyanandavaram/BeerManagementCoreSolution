@@ -79,7 +79,7 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
             Assert.True(getResult == Constants.updateOperation);
         }
         [Fact]
-        public void UpdateBeerDetails_ValidationFail_BreweryName_Already_Exists_Repository()
+        public void UpdateBreweryDetails_ValidationFail_BreweryName_Already_Exists_Repository()
         {
             var updateRecord = new Brewery { BreweryId = 3, BreweryName = "United Beverages-Dallas" };
 
@@ -105,7 +105,7 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
         [Fact]
         public void SaveNewBreweryDetails_Success_Repository()
         {
-            var newRecord = new Brewery { BreweryId = 7, BreweryName = "Mexical Beverage" };
+            var newRecord = new Brewery { BreweryId = 6, BreweryName = "Mexical Beverage" };
 
             _genericRepo.Setup(x => x.SaveNewRecord(newRecord)).Returns(Constants.createOperation);
 
@@ -117,7 +117,7 @@ namespace BeerManagementCoreServicesTests.RepositoryUnitTests
         [Fact]
         public void SaveNewBreweryDetails_ValidationFail_BreweryName_Exists_Repository()
         {
-            var newRecord = new Brewery { BreweryId = 8, BreweryName = "United Beverages-Dallas" };
+            var newRecord = new Brewery { BreweryId = 7, BreweryName = "United Beverages-Dallas" };
 
             _genericRepo.Setup(x => x.SaveNewRecord(newRecord)).Returns(Constants.nameExists);
 
