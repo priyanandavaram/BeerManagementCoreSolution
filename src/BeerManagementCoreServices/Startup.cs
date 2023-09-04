@@ -1,14 +1,19 @@
 using Microsoft.Extensions.DependencyInjection;
-using BeerManagementCoreServices.Database;
-using BeerManagementCoreServices.Common;
-using BeerManagementCoreServices.Interfaces;
-using BeerManagementCoreServices.Repository;
+using BeerManagement.Repository.DatabaseContext;
+using BeerManagement.Services.Automapper;
+using BeerManagement.Repository.Interfaces;
+using BeerManagement.Repository.UnitOfWork;
+using BeerManagement.Services.Interfaces;
+using BeerManagement.Services.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using BeerManagement.Web.Middleware;
 
-namespace BeerManagementCoreServices
+namespace BeerManagement.Web
 {
     public class Startup
     {
@@ -25,23 +30,27 @@ namespace BeerManagementCoreServices
 
             services.AddControllers();
 
-            services.AddDbContext<BeerManagementDatabaseContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("BMSConnection")));
 
-            services.AddScoped<IBeerRepository, BeerRepository>();
-            services.AddScoped<IBreweryRepository, BreweryRepository>();
-            services.AddScoped<IBarRepository, BarRepository>();
-            services.AddScoped<ILinkBreweryAndBeerRepository, LinkBreweryAndBeerRepository>();
-            services.AddScoped<ILinkBarAndBeerRepository, LinkBarAndBeerRepository>();
-            services.AddScoped(typeof(IGenericServiceRepository<>), typeof(GenericServices<>));
+            services.AddAutoMapper(typeof(AutoMapperClass).Assembly);
+
+
+            services.AddScoped<IBeerService, BeerService>();
+            services.AddScoped<IBarService, BarService>();
+            services.AddScoped<IBreweryService, BreweryService>();
+            services.AddScoped<IBarAndBeerService, BarAndBeerService>();
+            services.AddScoped<IBreweryAndBeerService, BreweryAndBeerService>();
+            services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));        
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSwagger();
 
             app.UseSwaggerUI();
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

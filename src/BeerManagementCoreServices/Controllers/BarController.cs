@@ -1,48 +1,70 @@
-﻿using BeerManagementCoreServices.Interfaces;
-using BeerManagementCoreServices.Database;
-using System.Collections.Generic;
+﻿using BeerManagement.Services.Interfaces;
+using BeerManagement.Models.DataModels;
+using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BeerManagementCoreServices.Controllers
+namespace BeerManagement.Web
 {
     [ApiController]
     [Route("api/bar")]
     public class BarController
     {          
-        private readonly IBarRepository _barRepository;
-        public BarController(IBarRepository barRepository)
+        private readonly IBarService _barService;
+        public BarController(IBarService barService)
         {
-            _barRepository = barRepository;
+            _barService = barService;
         }
         [HttpGet]
         [Route("{id:int}")]
-        public Bars GetBarDetailsById(int id)
+        public IActionResult GetBarDetailsById(int id)
         {
-            return _barRepository.GetBarDetailsById(id);
+            if (id <= 0)
+            {
+                return SendReponse.BadRequestObjectResult("BarId");
+            }
+            var result = _barService.GetBarDetailsById(id);
+
+            return SendReponse.ReturnResponse(result);
         }
         [HttpGet]
-        [Route("")]
-        public List<Bars> GetAllBars()
+        public IActionResult GetAllBars()
         {
-            return _barRepository.GetAllBars();
+            var result = _barService.GetAllBars();
+
+            return SendReponse.ReturnResponse(result);
         }
         [HttpPut]
         [Route("{id:int}")]
-        public string UpdateBarDetails(int id, [FromBody] Bars updateBarDetails)
+        public IActionResult UpdateBarDetails(int id, [FromBody] BarModel barInfo)
         {
-            updateBarDetails.BarId = id;
+            if (barInfo == null)
+            {
+                return SendReponse.BadRequest();
+            }
 
-            var message = _barRepository.UpdateBarDetails(updateBarDetails);
+            if (id != barInfo.BarId || string.IsNullOrEmpty(barInfo.BarName) || id <= 0)
+            {
+                return SendReponse.BadRequest();
+            }
 
-            return message;
+            var result = _barService.UpdateBarDetails(barInfo, out string statusMessage);
+
+            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
         [HttpPost]
-        [Route("")]
-        public string SaveNewBarDetails([FromBody] Bars createNewBar)
+        public IActionResult SaveNewBarDetails([FromBody] BarModel barInfo)
         {
-            var message = _barRepository.SaveNewBarDetails(createNewBar);
+            if (barInfo == null)
+            {
+                return SendReponse.BadRequest();
+            }
+            if (string.IsNullOrEmpty(barInfo.BarAddress) || string.IsNullOrEmpty(barInfo.BarName))
+            {
+                return SendReponse.BadRequest();
+            }
+            var result = _barService.SaveNewBarDetails(barInfo, out string statusMessage);
 
-            return message;
+            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
     }
 }

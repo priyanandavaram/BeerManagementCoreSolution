@@ -1,49 +1,76 @@
-﻿using BeerManagementCoreServices.Database;
-using BeerManagementCoreServices.Interfaces;
-using System.Collections.Generic;
+﻿using BeerManagement.Services.Interfaces;
+using BeerManagement.Models.DataModels;
+using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BeerManagementCoreServices.Controllers
+namespace BeerManagement.Web
 {
     [ApiController]
     [Route("api/beer")]
     public class BeerController
     {
-        private readonly IBeerRepository _beerRepository;
+        private readonly IBeerService _beerService;
 
-        public BeerController(IBeerRepository beerRepository)
+        public BeerController(IBeerService beerService)
         {
-            _beerRepository = beerRepository;
+            _beerService = beerService;
         }
         [HttpGet]
         [Route("{id:int}")]
-        public Beers GetBeerDetailsById(int id)
+        public IActionResult GetBeerDetailsById(int id)
         {
-            return _beerRepository.GetBeerDetailsById(id);
+            if (id <= 0)
+            {
+                return SendReponse.BadRequestObjectResult("BeerId");
+            }
+            var result = _beerService.GetBeerDetailsById(id);
+
+            return SendReponse.ReturnResponse(result);
         }
         [HttpGet]
         [Route("{gtAlcoholByVolume}/{ltAlcoholByVolume}")]
-        public List<Beers> GetAllBeersByAlchoholPercentage(decimal gtAlcoholByVolume = 0, decimal ltAlcoholByVolume = 0)
+        public IActionResult GetAllBeersByAlchoholPercentage(decimal gtAlcoholByVolume = 0, decimal ltAlcoholByVolume = 0)
         {
-            return _beerRepository.GetAllBeersByAlchoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
+            if (gtAlcoholByVolume < 0 || ltAlcoholByVolume < 0)
+            {
+                return SendReponse.BadRequest();
+            }
+            var result = _beerService.GetAllBeersByAlchoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
+
+            return SendReponse.ReturnResponse(result);
         }
         [HttpPut]
         [Route("{id}")]
-        public string UpdateBeerDetails(int id, [FromBody] Beers updateBeerDetails)
+        public IActionResult UpdateBeerDetails(int id, [FromBody] BeerModel beerInfo)
         {
-            updateBeerDetails.BeerId = id;
+            if (beerInfo == null)
+            {
+                return SendReponse.BadRequest();
+            }
 
-            var message = _beerRepository.UpdateBeerDetails(updateBeerDetails);
+            if (id != beerInfo.BeerId || string.IsNullOrEmpty(beerInfo.BeerName) || id <= 0)
+            {
+                return SendReponse.BadRequest();
+            }
 
-            return message;
+            var result = _beerService.UpdateBeerDetails(beerInfo, out string statusMessage);
+
+            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
         [HttpPost]
-        [Route("")]
-        public string SaveNewBeerDetails([FromBody] Beers createNewBeer)
+        public IActionResult SaveNewBeerDetails([FromBody] BeerModel beerInfo)
         {
-            var message = _beerRepository.SaveNewBeerDetails(createNewBeer);
+            if (beerInfo == null)
+            {
+                return SendReponse.BadRequest();
+            }
+            if (string.IsNullOrEmpty(beerInfo.BeerName) || beerInfo.PercentageAlcoholByVolume < 0)
+            {
+                return SendReponse.BadRequest();
+            }
+            var result = _beerService.SaveNewBeerDetails(beerInfo, out string statusMessage);
 
-            return message;
-        }
+            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
+        }        
     }
 }
