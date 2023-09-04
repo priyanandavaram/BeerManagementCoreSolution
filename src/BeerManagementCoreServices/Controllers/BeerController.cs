@@ -28,7 +28,7 @@ namespace BeerManagement.Web
             return SendReponse.ReturnResponse(result);
         }
         [HttpGet]
-        [Route("{gtAlcoholByVolume}/{ltAlcoholByVolume}")]
+        [Route("{gtAlcoholByVolume}&{ltAlcoholByVolume}")]
         public IActionResult GetAllBeersByAlchoholPercentage(decimal gtAlcoholByVolume = 0, decimal ltAlcoholByVolume = 0)
         {
             if (gtAlcoholByVolume < 0 || ltAlcoholByVolume < 0)

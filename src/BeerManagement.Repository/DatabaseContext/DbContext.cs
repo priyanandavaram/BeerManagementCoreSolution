@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -8,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace BeerManagement.Repository.DatabaseContext
 {
-    public partial class AppDbContext : DbContext
+    public partial class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         public AppDbContext()
         {
@@ -30,14 +28,13 @@ namespace BeerManagement.Repository.DatabaseContext
             modelBuilder.Entity<Bars>(entity =>
             {
                 entity.HasKey(e => e.BarId)
-                    .HasName("PK__Bars__994232CBB3925BD8");
+                    .HasName("PK__Bar__E08249958669D15D");
 
                 entity.HasIndex(e => e.BarName)
                     .HasName("UK_Key_BarName")
                     .IsUnique();
 
                 entity.Property(e => e.BarAddress)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 

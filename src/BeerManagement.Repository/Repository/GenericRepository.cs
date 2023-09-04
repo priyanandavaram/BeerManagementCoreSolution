@@ -43,7 +43,7 @@ namespace BeerManagement.Repository.Repository
             }
             catch(Exception ex)
             {
-                statusMessage = "Error occured while creating the record.";
+                statusMessage = "Error occured while creating the record. " + ex.InnerException.Message;
                 return false;
             }
         }
@@ -69,7 +69,7 @@ namespace BeerManagement.Repository.Repository
             }
             catch (Exception ex)
             {
-                statusMessage = "Error occured while saving the record to the database.";
+                statusMessage = "Error occured while saving the record to the database. " + ex.InnerException.Message;
                 return false;
             }            
         }
