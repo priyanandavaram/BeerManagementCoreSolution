@@ -22,7 +22,6 @@ Attached is the sample data for performing POST & PUT operations to test the end
 POST /beer 
 
 	{
-		"beerId": 0,
 		"beerName": "Corona Premier ",
 		"percentageAlcoholByVolume": 4.0
 	}
@@ -38,7 +37,6 @@ PUT /beer/{id}
 POST /bar
 
 	{
-	  "barId": 0,
 	  "barName": "Cosmic Cocktails",
 	  "barAddress": "Cardiff, Wales"
 	}
@@ -54,7 +52,6 @@ PUT /bar/{id}
 POST /brewery 
 
 	{
-	  "breweryId": 0,
 	  "breweryName": "The Brewdog"
 	}
 
