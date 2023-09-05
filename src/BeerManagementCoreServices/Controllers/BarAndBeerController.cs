@@ -17,28 +17,31 @@ namespace BeerManagement.Web
         [Route("beer")]
         public IActionResult BarAndBeerLink([FromBody] BarAndBeerModel barAndBeer)
         {
-            if (barAndBeer == null)
+            if (ValidateInput(barAndBeer))
+            {
+                var result = _barAndBeerService.BarAndBeerLink(barAndBeer, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
             {
                 return SendReponse.BadRequest();
             }
-            if (barAndBeer.BarId <= 0 || barAndBeer.BeerId <= 0)
-            {
-                return SendReponse.BadRequest();
-            }
-            var result = _barAndBeerService.BarAndBeerLink(barAndBeer, out string statusMessage);
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
 
         [HttpGet]
-        [Route("{barId:int}/beer")]
+        [Route("{barId:int:min(1)}/beer")]
         public IActionResult BeersAssociatedWithBar(int barId)
         {
-            if (barId <= 0)
-            {
-                return SendReponse.BadRequestObjectResult("BarId");
-            }
             var result = _barAndBeerService.BeersAssociatedWithBar(barId);
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpGet]
@@ -46,7 +49,28 @@ namespace BeerManagement.Web
         public IActionResult BarsWithAssociatedBeers()
         {
             var result = _barAndBeerService.BarsWithAssociatedBeers();
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
+        }
+
+        private bool ValidateInput(BarAndBeerModel barAndBeer)
+        {
+            if (barAndBeer == null)
+            {
+                return false;
+            }
+            else if (barAndBeer.BarId <= 0)
+            {
+                return false;
+            }
+            else if (barAndBeer.BeerId <= 0)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

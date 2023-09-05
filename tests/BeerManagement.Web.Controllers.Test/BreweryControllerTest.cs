@@ -36,13 +36,6 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BreweryDetailsById_Invalid_Input_Controller()
-        {
-            var breweryDetailsById = _breweryController.BreweryDetailsById(-1);
-            Assert.True(breweryDetailsById.GetType().FullName == SendReponse.BadRequestObjectResult("BreweryId").ToString());
-        }
-
-        [Fact]
         public void AllBrewery_ShouldReturnData_Controller()
         {
             var breweryDetails = StubDataForController.BreweryDetails();
@@ -65,14 +58,6 @@ namespace BeerManagement.Web.Controllers.Test
         {
             var breweryInfo = StubDataForController.InitializeBreweryData(1, "");
             var result = _breweryController.BreweryDetailsUpdate(1, breweryInfo);
-            Assert.True(result.GetType().FullName == SendReponse.BadRequest().ToString());
-        }
-
-        [Fact]
-        public void BreweryDetailsUpdate_ValidationFail_Invalid_Id_Controller()
-        {
-            var breweryInfo = StubDataForController.InitializeBreweryData(-1, "Coke Zero Sugar");
-            var result = _breweryController.BreweryDetailsUpdate(-1, breweryInfo);
             Assert.True(result.GetType().FullName == SendReponse.BadRequest().ToString());
         }
 

@@ -14,58 +14,85 @@ namespace BeerManagement.Web
             _beerService = beerService;
         }
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int:min(1)}")]
         public IActionResult BeerDetailsById(int id)
         {
-            if (id <= 0)
-            {
-                return SendReponse.BadRequestObjectResult("BeerId");
-            }
             var result = _beerService.BeerDetailsById(id);
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpGet]
-        [Route("{gtAlcoholByVolume}&{ltAlcoholByVolume}")]
+        [Route("{gtAlcoholByVolume:decimal:min(0)}&{ltAlcoholByVolume:decimal:min(0)}")]
         public IActionResult AllBeersByAlchoholPercentage(decimal gtAlcoholByVolume = 0, decimal ltAlcoholByVolume = 0)
         {
-            if (gtAlcoholByVolume < 0 || ltAlcoholByVolume < 0)
-            {
-                return SendReponse.BadRequest();
-            }
             var result = _beerService.AllBeersByAlchoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:int:min(1)}")]
         public IActionResult BeerDetailsUpdate(int id, [FromBody] BeerModel beerInfo)
         {
-            if (beerInfo == null)
+            if (id != beerInfo.BeerId)
             {
                 return SendReponse.BadRequest();
             }
-            if (id != beerInfo.BeerId || string.IsNullOrEmpty(beerInfo.BeerName) || id <= 0)
+            if (ValidateInput(beerInfo))
+            {
+                var result = _beerService.BeerDetailsUpdate(beerInfo, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
             {
                 return SendReponse.BadRequest();
             }
-            var result = _beerService.BeerDetailsUpdate(beerInfo, out string statusMessage);
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
 
         [HttpPost]
         public IActionResult NewBeer([FromBody] BeerModel beerInfo)
         {
+            if (ValidateInput(beerInfo))
+            {
+                var result = _beerService.NewBeer(beerInfo, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
+            {
+                return SendReponse.BadRequest();
+            }
+        }
+
+        private bool ValidateInput(BeerModel beerInfo)
+        {
             if (beerInfo == null)
             {
-                return SendReponse.BadRequest();
+                return false;
             }
-            if (string.IsNullOrEmpty(beerInfo.BeerName) || beerInfo.PercentageAlcoholByVolume < 0)
+            else if (string.IsNullOrEmpty(beerInfo.BeerName))
             {
-                return SendReponse.BadRequest();
+                return false;
             }
-            var result = _beerService.NewBeer(beerInfo, out string statusMessage);
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
+            else if (beerInfo.PercentageAlcoholByVolume < 0)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

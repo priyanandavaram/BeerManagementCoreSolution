@@ -14,53 +14,80 @@ namespace BeerManagement.Web
             _breweryService = breweryService;
         }
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int:min(1)}")]
         public IActionResult BreweryDetailsById(int id)
         {
-            if (id <= 0)
-            {
-                return SendReponse.BadRequestObjectResult("BreweryId");
-            }
             var result = _breweryService.BreweryDetailsById(id);
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpGet]
         public IActionResult AllBreweries()
         {
             var result = _breweryService.AllBreweries();
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpPut]
-        [Route("{id:int}")]
+        [Route("{id:int:min(1)}")]
         public IActionResult BreweryDetailsUpdate(int id, [FromBody] BreweryModel breweryInfo)
         {
-            if (breweryInfo == null)
+            if (id != breweryInfo.BreweryId)
             {
                 return SendReponse.BadRequest();
             }
-            if (id != breweryInfo.BreweryId || string.IsNullOrEmpty(breweryInfo.BreweryName) || id <= 0)
+            if (ValidateInput(breweryInfo))
+            {
+                var result = _breweryService.BreweryDetailsUpdate(breweryInfo, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
             {
                 return SendReponse.BadRequest();
             }
-            var result = _breweryService.BreweryDetailsUpdate(breweryInfo, out string statusMessage);
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
 
         [HttpPost]
         public IActionResult NewBrewery([FromBody] BreweryModel breweryInfo)
         {
+            if (ValidateInput(breweryInfo))
+            {
+                var result = _breweryService.NewBrewery(breweryInfo, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
+            {
+                return SendReponse.BadRequest();
+            }
+        }
+
+        private bool ValidateInput(BreweryModel breweryInfo)
+        {
             if (breweryInfo == null)
             {
-                return SendReponse.BadRequest();
+                return false;
             }
-            if (string.IsNullOrEmpty(breweryInfo.BreweryName))
+            else if (string.IsNullOrEmpty(breweryInfo.BreweryName))
             {
-                return SendReponse.BadRequest();
+                return false;
             }
-            var result = _breweryService.NewBrewery(breweryInfo, out string statusMessage);
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
+            return true;
         }
     }
 }

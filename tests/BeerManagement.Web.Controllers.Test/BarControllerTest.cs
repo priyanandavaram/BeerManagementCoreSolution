@@ -37,13 +37,6 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BarDetailsById_Invalid_Input_Controller()
-        {
-            var beerDetailsById = _barController.BarDetailsById(-1);
-            Assert.True(beerDetailsById.GetType().FullName == SendReponse.BadRequestObjectResult("BarId").ToString());
-        }
-
-        [Fact]
         public void GetAllBars_NoData_Controller()
         {
             List<BarModel> bars = new List<BarModel>();
@@ -76,14 +69,6 @@ namespace BeerManagement.Web.Controllers.Test
         {
             var barInfo = StubDataForController.InitializeBarData(1, "", "London Kings Cross");
             var result = _barController.BarDetailsUpdate(1, barInfo);
-            Assert.True(result.GetType().FullName == SendReponse.BadRequest().ToString());
-        }
-
-        [Fact]
-        public void BarDetailsUpdate_ValidationFail_Invalid_Id_Controller()
-        {
-            var barInfo = StubDataForController.InitializeBarData(-1, "United club Bar", "Reading");
-            var result = _barController.BarDetailsUpdate(-1, barInfo);
             Assert.True(result.GetType().FullName == SendReponse.BadRequest().ToString());
         }
 

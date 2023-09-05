@@ -36,13 +36,6 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BeerDetailsById_Invalid_Input_Controller()
-        {
-            var beerDetailsById = _beerController.BeerDetailsById(-1);
-            Assert.True(beerDetailsById.GetType().FullName == SendReponse.BadRequestObjectResult("BeerId").ToString());
-        }
-
-        [Fact]
         public void AllBeersByAlcoholVolume_ShouldReturnData_Controller()
         {
             var beerDetails = StubDataForController.BeerDetails();
@@ -76,14 +69,6 @@ namespace BeerManagement.Web.Controllers.Test
         {
             var beerInfo = StubDataForController.InitializeBeerData(1, "", 12.08M);
             var result = _beerController.BeerDetailsUpdate(1, beerInfo);
-            Assert.True(result.GetType().FullName == SendReponse.BadRequest().ToString());
-        }
-
-        [Fact]
-        public void BeerDetailsUpdate_ValidationFail_Invalid_Id_Controller()
-        {
-            var beerInfo = StubDataForController.InitializeBeerData(-1, "Stella", 42.9M);
-            var result = _beerController.BeerDetailsUpdate(-1, beerInfo);
             Assert.True(result.GetType().FullName == SendReponse.BadRequest().ToString());
         }
 

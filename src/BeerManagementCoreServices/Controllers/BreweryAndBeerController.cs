@@ -17,30 +17,31 @@ namespace BeerManagement.Web
         [Route("beer")]
         public IActionResult BreweryAndBeerLink([FromBody] BreweryAndBeerModel breweryAndBeer)
         {
-            if (breweryAndBeer == null)
+            if (ValidateInput(breweryAndBeer))
+            {
+                var result = _breweryAndBeerService.BreweryAndBeerLink(breweryAndBeer, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
             {
                 return SendReponse.BadRequest();
             }
-            if (breweryAndBeer.BreweryId <= 0 || breweryAndBeer.BeerId <= 0)
-            {
-                return SendReponse.BadRequest();
-            }
-            var result = _breweryAndBeerService.BreweryAndBeerLink(breweryAndBeer, out string statusMessage);
-
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
 
         [HttpGet]
-        [Route("{breweryId:int}/beer")]
+        [Route("{breweryId:int:min(1)}/beer")]
         public IActionResult AllBeersAssociatedWithBrewery(int breweryId)
         {
-            if (breweryId <= 0)
-            {
-                return SendReponse.BadRequestObjectResult("BreweryId");
-            }
             var result = _breweryAndBeerService.AllBeersAssociatedWithBrewery(breweryId);
-
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpGet]
@@ -48,8 +49,24 @@ namespace BeerManagement.Web
         public IActionResult AllBreweriesWithAssociatedBeers()
         {
             var result = _breweryAndBeerService.AllBreweriesWithAssociatedBeers();
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
+        }
 
-            return SendReponse.ReturnResponse(result);
+        private bool ValidateInput(BreweryAndBeerModel breweryAndBeer)
+        {
+            if (breweryAndBeer == null)
+            {
+                return false;
+            }
+            if (breweryAndBeer.BreweryId <= 0 || breweryAndBeer.BeerId <= 0)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

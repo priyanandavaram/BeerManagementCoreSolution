@@ -2,43 +2,7 @@
 namespace BeerManagement.Web.Common
 {
     public class SendReponse
-    {
-        public static IActionResult ReturnResponse(object result)
-        {
-            if (result == null)
-            {
-                return NoContentFound();
-            }
-            else
-            {
-                return new OkObjectResult(new ApiAttributes<object>
-                {
-                    StatusCode = 200,
-                    Message = "Success",
-                    Result = result
-                });
-            }
-        }
-
-        public static IActionResult ReturnResponseByBooleanValue(bool result, string message)
-        {
-            if (!result)
-            {
-                return new BadRequestObjectResult(new ApiAttributes<object>
-                {
-                    StatusCode = 400,
-                    Message = message
-                });
-            }
-            else
-            {
-                return new OkObjectResult(new ApiAttributes<object>
-                {
-                    StatusCode = 200,
-                    Message = message
-                });
-            }
-        }
+    {    
         public static IActionResult ApiResponse(object result)
         {
             return new OkObjectResult(new ApiAttributes<object>
@@ -48,14 +12,25 @@ namespace BeerManagement.Web.Common
                 Result = result
             });
         }
-        public static IActionResult ApiResponse(bool result)
+
+        public static IActionResult ApiResponse(bool result, string message)
         {
             return new OkObjectResult(new ApiAttributes<object>
             {
                 StatusCode = 200,
-                Message = "Success"
+                Message = message
             });
         }
+
+        public static IActionResult BadRequestObjectResult(bool result, string message)
+        {
+            return new BadRequestObjectResult(new ApiAttributes<object>
+            {
+                StatusCode = 400,
+                Message = message
+            });
+        }
+
         public static IActionResult BadRequestObjectResult(string input)
         {
             return new BadRequestObjectResult(new ApiAttributes<object>

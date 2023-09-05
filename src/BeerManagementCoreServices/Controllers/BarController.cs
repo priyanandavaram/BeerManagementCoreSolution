@@ -14,53 +14,84 @@ namespace BeerManagement.Web
             _barService = barService;
         }
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int:min(1)}")]
         public IActionResult BarDetailsById(int id)
         {
-            if (id <= 0)
-            {
-                return SendReponse.BadRequestObjectResult("BarId");
-            }
             var result = _barService.BarDetailsById(id);
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpGet]
         public IActionResult AllBars()
         {
             var result = _barService.AllBars();
-            return SendReponse.ReturnResponse(result);
+            if (result != null)
+            {
+                return SendReponse.ApiResponse(result);
+            }
+            return SendReponse.NoContentFound();
         }
 
         [HttpPut]
-        [Route("{id:int}")]
+        [Route("{id:int:min(1)}")]
         public IActionResult BarDetailsUpdate(int id, [FromBody] BarModel barInfo)
         {
-            if (barInfo == null)
+            if (id != barInfo.BarId)
             {
                 return SendReponse.BadRequest();
             }
-            if (id != barInfo.BarId || string.IsNullOrEmpty(barInfo.BarName) || id <= 0)
+            if (ValidateInput(barInfo))
+            {
+                var result = _barService.BarDetailsUpdate(barInfo, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
             {
                 return SendReponse.BadRequest();
             }
-            var result = _barService.BarDetailsUpdate(barInfo, out string statusMessage);
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
 
         [HttpPost]
         public IActionResult NewBar([FromBody] BarModel barInfo)
         {
+            if (ValidateInput(barInfo))
+            {
+                var result = _barService.NewBar(barInfo, out string statusMessage);
+                if (result)
+                {
+                    return SendReponse.ApiResponse(result, statusMessage);
+                }
+                return SendReponse.BadRequestObjectResult(result, statusMessage);
+            }
+            else
+            {
+                return SendReponse.BadRequest();
+            }
+        }
+
+        private bool ValidateInput(BarModel barInfo)
+        {
             if (barInfo == null)
             {
-                return SendReponse.BadRequest();
+                return false;
             }
-            if (string.IsNullOrEmpty(barInfo.BarAddress) || string.IsNullOrEmpty(barInfo.BarName))
+            else if (string.IsNullOrEmpty(barInfo.BarName))
             {
-                return SendReponse.BadRequest();
+                return false;
             }
-            var result = _barService.NewBar(barInfo, out string statusMessage);
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
+            else if (string.IsNullOrEmpty(barInfo.BarAddress))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
