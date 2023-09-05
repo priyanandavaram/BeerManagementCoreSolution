@@ -1,7 +1,5 @@
-﻿using BeerManagement.Repository.DatabaseContext;
-using BeerManagement.Models.DataModels;
+﻿using BeerManagement.Models;
 using System.Collections.Generic;
-
 namespace BeerManagement.Repository.Models
 {
     public class BreweryWithAssociatedBeersModel

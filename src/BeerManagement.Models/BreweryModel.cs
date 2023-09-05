@@ -1,5 +1,4 @@
-﻿
-namespace BeerManagement.Models.DataModels
+﻿namespace BeerManagement.Models
 {
     public class BreweryModel
     {

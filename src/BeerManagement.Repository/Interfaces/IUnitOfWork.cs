@@ -1,7 +1,4 @@
-﻿using BeerManagement.Repository.Interfaces;
-using System.Text;
-
-namespace BeerManagement.Repository.Interfaces
+﻿namespace BeerManagement.Repository.Interfaces
 {
     public interface IUnitOfWork<entity>
     {

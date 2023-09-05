@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
-
 namespace BeerManagement.Repository.DatabaseContext
 {
     public partial class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
@@ -11,18 +7,15 @@ namespace BeerManagement.Repository.DatabaseContext
         public AppDbContext()
         {
         }
-
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
         }
-
         public virtual DbSet<Bars> Bars { get; set; }
         public virtual DbSet<Beers> Beers { get; set; }
         public virtual DbSet<Brewery> Brewery { get; set; }
         public virtual DbSet<LinkBarWithBeer> LinkBarWithBeer { get; set; }
         public virtual DbSet<LinkBreweryWithBeer> LinkBreweryWithBeer { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Bars>(entity =>
