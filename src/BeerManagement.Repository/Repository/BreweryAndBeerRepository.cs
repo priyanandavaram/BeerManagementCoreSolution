@@ -1,44 +1,44 @@
-﻿using BeerManagement.Repository.DatabaseContext;
-using BeerManagement.Models.DataModels;
+﻿using AutoMapper;
+using BeerManagement.Models;
+using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
 using BeerManagement.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-
 namespace BeerManagement.Repository.Repository
 {
-    public class BreweryAndBeerRepository : IBreweryAndBeerRepository 
+    public class BreweryAndBeerRepository : IBreweryAndBeerRepository
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper mapper;
-
         public BreweryAndBeerRepository(AppDbContext dbContext, IMapper autoMapper)
         {
             _dbContext = dbContext;
             mapper = autoMapper;
         }
-
-        public List<BreweryWithAssociatedBeersModel> GetAllBeersAssociatedWithBrewery(int breweryId)
+        public List<BreweryWithAssociatedBeersModel> AllBeersAssociatedWithBrewery(int breweryId)
         {
-            var breweryWithAssociatedBeers = _dbContext.LinkBreweryWithBeer.Include(c => c.Beer).Include(c => c.Brewery).Where(c => c.BreweryId == breweryId).ToList();
-
-            return GetBreweryBeersData(breweryWithAssociatedBeers);
+            var beersAssociatedWithBrewery = _dbContext.LinkBreweryWithBeer.Include(allLinkedEntities => allLinkedEntities.Beer)
+                                                                           .Include(allLinkedEntities => allLinkedEntities.Brewery)
+                                                                           .Where(allLinkedEntities => allLinkedEntities.BreweryId == breweryId)
+                                                                           .ToList();
+            return BreweryAndAssociatedBeersInfo(beersAssociatedWithBrewery);
         }
 
-        public List<BreweryWithAssociatedBeersModel> GetAllBreweriesWithAssociatedBeers()
+        public List<BreweryWithAssociatedBeersModel> AllBreweriesWithAssociatedBeers()
         {
-            var totalBreweriesWithAssociatedBeers = _dbContext.LinkBreweryWithBeer.Include(c => c.Beer).Include(c => c.Brewery).ToList();
-
-            return GetBreweryBeersData(totalBreweriesWithAssociatedBeers);
+            var breweryWithAssociatedBeers = _dbContext.LinkBreweryWithBeer.Include(allLinkedEntities => allLinkedEntities.Beer)
+                                                                           .Include(allLinkedEntities => allLinkedEntities.Brewery)
+                                                                           .ToList();
+            return BreweryAndAssociatedBeersInfo(breweryWithAssociatedBeers);
         }
 
-        public bool LinkBreweryAndBeer(LinkBreweryWithBeer breweryAndBeerInfo, out string statusMessage)
-        {  
-            if(IsExists(breweryAndBeerInfo.BreweryId, breweryAndBeerInfo.BeerId))
+        public bool BreweryAndBeerLink(LinkBreweryWithBeer breweryAndBeerInfo, out string statusMessage)
+        {
+            if (IsExist(breweryAndBeerInfo.BreweryId, breweryAndBeerInfo.BeerId))
             {
-                if(!SameCombinationExists(breweryAndBeerInfo.BreweryId, breweryAndBeerInfo.BeerId))
+                if (!IsCombinationExist(breweryAndBeerInfo.BreweryId, breweryAndBeerInfo.BeerId))
                 {
                     _dbContext.Add(breweryAndBeerInfo);
                     _dbContext.SaveChanges();
@@ -55,32 +55,35 @@ namespace BeerManagement.Repository.Repository
             {
                 statusMessage = "Provided brewery/beer Id doesn't exists in the database.";
                 return false;
-            }            
+            }
         }
-        private List<BreweryWithAssociatedBeersModel> GetBreweryBeersData(List<LinkBreweryWithBeer> totalBreweryAndBars)
+
+        private List<BreweryWithAssociatedBeersModel> BreweryAndAssociatedBeersInfo(List<LinkBreweryWithBeer> totalBreweryAndBars)
         {
-            var structuredData = totalBreweryAndBars.GroupBy(a => (a.BreweryId, a.Brewery.BreweryName))
+            var breweryAndAssociatedBeersInfo = totalBreweryAndBars.GroupBy(breweryInfo => (breweryInfo.BreweryId, breweryInfo.Brewery.BreweryName))
                                         .Select(categoryGroup => new BreweryWithAssociatedBeersModel
                                         {
                                             BreweryId = categoryGroup.Key.BreweryId,
                                             BreweryName = categoryGroup.Key.BreweryName,
-                                            ListOfBeers = mapper.Map<List<BeerModel>>(categoryGroup.Select(a => a.Beer).ToList())
+                                            ListOfBeers = mapper.Map<List<BeerModel>>(categoryGroup.Select(beerInfo => beerInfo.Beer).ToList())
                                         });
-
-            return structuredData.ToList();           
+            return breweryAndAssociatedBeersInfo.ToList();
         }
-        private bool IsExists(int BreweryId, int beerId)
+
+        private bool IsExist(int BreweryId, int beerId)
         {
-            if ((_dbContext.Brewery.Any(x => x.BreweryId == BreweryId)) && (_dbContext.Beers.Any(x => x.BeerId == beerId)))
+            if ((_dbContext.Brewery.Any(breweryAndBeerInfo => breweryAndBeerInfo.BreweryId == BreweryId)) 
+                && (_dbContext.Beers.Any(breweryAndBeerInfo => breweryAndBeerInfo.BeerId == beerId)))
             {
                 return true;
             }
             return false;
         }
-        private bool SameCombinationExists(int BreweryId, int beerId)
-        {
-            var exists = _dbContext.LinkBreweryWithBeer.FirstOrDefault(x => x.BreweryId == BreweryId && x.BeerId == beerId);
 
+        private bool IsCombinationExist(int BreweryId, int beerId)
+        {
+            var exists = _dbContext.LinkBreweryWithBeer.FirstOrDefault(breweryAndBeerInfo => breweryAndBeerInfo.BreweryId == BreweryId 
+                                                                      && breweryAndBeerInfo.BeerId == beerId);
             return exists != null ? true : false;
         }
     }

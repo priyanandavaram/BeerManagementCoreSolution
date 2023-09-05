@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
 namespace BeerManagement.Web.Common
 {
     public class SendReponse
     {
         public static IActionResult ReturnResponse(object result)
         {
-            if(result == null)
+            if (result == null)
             {
                 return NoContentFound();
             }
@@ -20,6 +19,7 @@ namespace BeerManagement.Web.Common
                 });
             }
         }
+
         public static IActionResult ReturnResponseByBooleanValue(bool result, string message)
         {
             if (!result)
@@ -55,7 +55,7 @@ namespace BeerManagement.Web.Common
                 StatusCode = 200,
                 Message = "Success"
             });
-        }        
+        }
         public static IActionResult BadRequestObjectResult(string input)
         {
             return new BadRequestObjectResult(new ApiAttributes<object>

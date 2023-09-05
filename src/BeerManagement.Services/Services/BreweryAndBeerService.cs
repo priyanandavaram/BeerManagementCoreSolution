@@ -1,40 +1,37 @@
-﻿using BeerManagement.Repository.Interfaces;
+﻿using AutoMapper;
+using BeerManagement.Models;
 using BeerManagement.Repository.DatabaseContext;
-using BeerManagement.Models.DataModels;
+using BeerManagement.Repository.Interfaces;
 using BeerManagement.Repository.Models;
 using BeerManagement.Services.Interfaces;
 using System.Collections.Generic;
-using AutoMapper;
-
 namespace BeerManagement.Services.Services
 {
     public class BreweryAndBeerService : IBreweryAndBeerService
     {
         private readonly IUnitOfWork<LinkBreweryWithBeer> unitOfWork;
         private readonly IMapper mapper;
-
         public BreweryAndBeerService(IUnitOfWork<LinkBreweryWithBeer> unitOfWork, IMapper autoMapper)
         {
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
-
-        public List<BreweryWithAssociatedBeersModel> GetAllBeersAssociatedWithBrewery(int breweryId)
+        public List<BreweryWithAssociatedBeersModel> AllBeersAssociatedWithBrewery(int breweryId)
         {
-            var getAllBeersAssociatedWithBrewery = unitOfWork.BreweryAndBeerRepository.GetAllBeersAssociatedWithBrewery(breweryId);
-            return getAllBeersAssociatedWithBrewery;
+            var allBeersAssociatedWithBrewery = unitOfWork.BreweryAndBeerRepository.AllBeersAssociatedWithBrewery(breweryId);
+            return allBeersAssociatedWithBrewery;
         }
 
-        public List<BreweryWithAssociatedBeersModel> GetAllBreweriesWithAssociatedBeers()
+        public List<BreweryWithAssociatedBeersModel> AllBreweriesWithAssociatedBeers()
         {
-            var getAllBreweriesWithAssociatedBeers = unitOfWork.BreweryAndBeerRepository.GetAllBreweriesWithAssociatedBeers();
-            return getAllBreweriesWithAssociatedBeers;
+            var allBreweriesWithAssociatedBeers = unitOfWork.BreweryAndBeerRepository.AllBreweriesWithAssociatedBeers();
+            return allBreweriesWithAssociatedBeers;
         }
 
-        public bool LinkBreweryAndBeer(BreweryAndBeerModel breweryAndBeer, out string statusMessage)
+        public bool BreweryAndBeerLink(BreweryAndBeerModel breweryAndBeer, out string statusMessage)
         {
-           var breweryAndBeerInfo = mapper.Map<LinkBreweryWithBeer>(breweryAndBeer);
-           return unitOfWork.BreweryAndBeerRepository.LinkBreweryAndBeer(breweryAndBeerInfo, out statusMessage);           
+            var breweryAndBeerInfo = mapper.Map<LinkBreweryWithBeer>(breweryAndBeer);
+            return unitOfWork.BreweryAndBeerRepository.BreweryAndBeerLink(breweryAndBeerInfo, out statusMessage);
         }
     }
 }

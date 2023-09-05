@@ -1,17 +1,15 @@
-﻿using BeerManagement.Web.Services.Test.TestHelper;
-using BeerManagement.Web.Services.Test.Common;
+﻿using AutoMapper;
+using BeerManagement.Models;
 using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
+using BeerManagement.Repository.Models;
 using BeerManagement.Repository.UnitOfWork;
 using BeerManagement.Services.Interfaces;
-using BeerManagement.Repository.Models;
 using BeerManagement.Services.Services;
-using BeerManagement.Models.DataModels;
+using BeerManagement.Web.Services.Test.Common;
+using BeerManagement.Web.Services.Test.TestHelper;
 using System.Linq;
-using AutoMapper;
 using Xunit;
-
-
 namespace BeerManagement.Web.Services.Test
 {
     [Collection("AppDbContextCollection")]
@@ -36,40 +34,37 @@ namespace BeerManagement.Web.Services.Test
             _barAndBeerService = new BarAndBeerService(IunitOfWork, mapper);
         }
         [Fact]
-        public void GetAllBeersWithAssociatedWithBar_ShouldReturnData_Service()
+        public void BeersAssociatedWithBar_ShouldReturnData_Service()
         {
-            var getBarWithBeerDetailsById = _barAndBeerService.GetAllBeersAssociatedWithBar(3);
-
-            Assert.NotNull(getBarWithBeerDetailsById);
+            var barWithBeerDetailsById = _barAndBeerService.BeersAssociatedWithBar(3);
+            Assert.NotNull(barWithBeerDetailsById);
         }
+
         [Fact]
-        public void GetAllBarsWithAssociatedBeers_ShouldReturnData_Service()
+        public void BarsWithAssociatedBeers_ShouldReturnData_Service()
         {
-            var getBarsWithBeerDetails = _barAndBeerService.GetAllBarsWithAssociatedBeers();
-
-            Assert.NotNull(getBarsWithBeerDetails);
+            var barsWithBeerDetails = _barAndBeerService.BarsWithAssociatedBeers();
+            Assert.NotNull(barsWithBeerDetails);
         }
+
         [Fact]
-        public void LinkBarAndBeer_Success_Service()
+        public void BarAndBeerLink_Success_Service()
         {
             var barAndBeerInfo = StubDataForService.InitializeBarAndBeerInfo(2, 4);
-
-            var getResult = _barAndBeerService.LinkBarAndBeer(barAndBeerInfo, out string statusMessage);
-
-            var checkIfLinkExists = _dbContext.LinkBarWithBeer.FirstOrDefault(x => x.BarId == barAndBeerInfo.BarId & x.BeerId == barAndBeerInfo.BeerId);
-
+            var getResult = _barAndBeerService.BarAndBeerLink(barAndBeerInfo, out string statusMessage);
+            var checkIfLinkExists = _dbContext.LinkBarWithBeer.FirstOrDefault(barAndBeer => barAndBeer.BarId == barAndBeerInfo.BarId
+                                                                            & barAndBeer.BeerId == barAndBeerInfo.BeerId);
             Assert.True(getResult);
             Assert.NotNull(checkIfLinkExists);
         }
+
         [Fact]
         public void LinkBarAndBeer_ValidationCheck_Link_Exists_Service()
         {
-            var barAndBeerInfo = StubDataForService.InitializeBarAndBeerInfo(3,4);
-
-            var getResult = _barAndBeerService.LinkBarAndBeer(barAndBeerInfo, out string statusMessage);
-
-            var checkIfLinkExists = _dbContext.LinkBarWithBeer.FirstOrDefault(x => x.BarId == barAndBeerInfo.BarId & x.BeerId == barAndBeerInfo.BeerId);
-
+            var barAndBeerInfo = StubDataForService.InitializeBarAndBeerInfo(3, 4);
+            var getResult = _barAndBeerService.BarAndBeerLink(barAndBeerInfo, out string statusMessage);
+            var checkIfLinkExists = _dbContext.LinkBarWithBeer.FirstOrDefault(barAndBeer => barAndBeer.BarId == barAndBeerInfo.BarId
+                                                                            & barAndBeer.BeerId == barAndBeerInfo.BeerId);
             Assert.False(getResult);
             Assert.NotNull(checkIfLinkExists);
         }

@@ -74,9 +74,7 @@ POST /brewery/beer
 
 POST /bar/beer
 
-{
+	{
 	  "barId": 3,
 	  "beerId": 5
 	}
-
-	

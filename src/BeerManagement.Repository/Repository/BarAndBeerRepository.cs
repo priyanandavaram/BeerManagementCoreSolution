@@ -1,45 +1,44 @@
-﻿using BeerManagement.Repository.DatabaseContext;
-using BeerManagement.Models.DataModels;
+﻿using AutoMapper;
+using BeerManagement.Models;
+using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
 using BeerManagement.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-
-
 namespace BeerManagement.Repository.Repository
 {
     public class BarAndBeerRepository : IBarAndBeerRepository
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper mapper;
-
         public BarAndBeerRepository(AppDbContext dbContext, IMapper autoMapper)
         {
             _dbContext = dbContext;
             mapper = autoMapper;
         }
-
-        public List<BarsWithAssociatedBeersModel> GetAllBarsWithAssociatedBeers()
+        public List<BarsWithAssociatedBeersModel> BarsWithAssociatedBeers()
         {
-            var totalBarsWithAssociatedBeers = _dbContext.LinkBarWithBeer.Include(c => c.Beer).Include(c => c.Bar).ToList();
-
-            return GetBarBeersData(totalBarsWithAssociatedBeers);
+            var barsWithAssociatedBeers = _dbContext.LinkBarWithBeer.Include(allLinkedEntities => allLinkedEntities.Beer)
+                                                                    .Include(allLinkedEntities => allLinkedEntities.Bar)
+                                                                    .ToList();
+            return BarsAndAssociatedBeersInfo(barsWithAssociatedBeers);
         }
 
-        public List<BarsWithAssociatedBeersModel> GetAllBeersAssociatedWithBar(int barId)
+        public List<BarsWithAssociatedBeersModel> BeersAssociatedWithBar(int barId)
         {
-            var barWithAssociatedBeers = _dbContext.LinkBarWithBeer.Include(c => c.Beer).Include(c => c.Bar).Where(c => c.BarId == barId).ToList();
-
-            return GetBarBeersData(barWithAssociatedBeers);          
+            var beersAssociatedWithBar = _dbContext.LinkBarWithBeer.Include(allLinkedEntities => allLinkedEntities.Beer)
+                                                                   .Include(allLinkedEntities => allLinkedEntities.Bar)
+                                                                   .Where(allLinkedEntities => allLinkedEntities.BarId == barId)
+                                                                   .ToList();
+            return BarsAndAssociatedBeersInfo(beersAssociatedWithBar);
         }
 
-        public bool LinkBarAndBeer(LinkBarWithBeer barAndBeerInfo, out string statusMessage)
+        public bool BarAndBeerLink(LinkBarWithBeer barAndBeerInfo, out string statusMessage)
         {
-            if(IsExists(barAndBeerInfo.BarId, barAndBeerInfo.BeerId))
+            if (IsExist(barAndBeerInfo.BarId, barAndBeerInfo.BeerId))
             {
-               if(!SameCombinationExists(barAndBeerInfo.BarId, barAndBeerInfo.BeerId))
+                if (!IsCombinationExist(barAndBeerInfo.BarId, barAndBeerInfo.BeerId))
                 {
                     _dbContext.LinkBarWithBeer.Add(barAndBeerInfo);
                     _dbContext.SaveChanges();
@@ -56,24 +55,26 @@ namespace BeerManagement.Repository.Repository
             {
                 statusMessage = "Provided bar/beer Id doesn't exists in the database.";
                 return false;
-            }            
+            }
         }
-        private List<BarsWithAssociatedBeersModel> GetBarBeersData(List<LinkBarWithBeer> totalBarsAndBeers)
+
+        private List<BarsWithAssociatedBeersModel> BarsAndAssociatedBeersInfo(List<LinkBarWithBeer> barsAndBeers)
         {
-            var structuredData = totalBarsAndBeers.GroupBy(a => (a.BarId, a.Bar.BarName, a.Bar.BarAddress))
+            var barsAndAssociatedBeersInfo = barsAndBeers.GroupBy(barInfo => (barInfo.BarId, barInfo.Bar.BarName, barInfo.Bar.BarAddress))
                                         .Select(categoryGroup => new BarsWithAssociatedBeersModel
                                         {
                                             BarId = categoryGroup.Key.BarId,
                                             BarName = categoryGroup.Key.BarName,
                                             BarAddress = categoryGroup.Key.BarAddress,
-                                            ListOfBeers = mapper.Map<List<BeerModel>>(categoryGroup.Select(a => a.Beer).ToList()) 
+                                            ListOfBeers = mapper.Map<List<BeerModel>>(categoryGroup.Select(beerInfo => beerInfo.Beer).ToList())
                                         });
-
-            return structuredData.ToList();
+            return barsAndAssociatedBeersInfo.ToList();
         }
-        private bool IsExists(int barId, int beerId)
+
+        private bool IsExist(int barId, int beerId)
         {
-            if ((_dbContext.Bars.Any(x => x.BarId == barId)) && (_dbContext.Beers.Any(x => x.BeerId == beerId)))
+            if ((_dbContext.Bars.Any(barAndBeerInfo => barAndBeerInfo.BarId == barId))
+                && (_dbContext.Beers.Any(barAndBeerInfo => barAndBeerInfo.BeerId == beerId)))
             {
                 return true;
             }
@@ -82,10 +83,11 @@ namespace BeerManagement.Repository.Repository
                 return false;
             }
         }
-        private bool SameCombinationExists(int barId, int beerId)
-        {
-            var exists = _dbContext.LinkBarWithBeer.FirstOrDefault(x => x.BarId == barId && x.BeerId == beerId);
 
+        private bool IsCombinationExist(int barId, int beerId)
+        {
+            var exists = _dbContext.LinkBarWithBeer.FirstOrDefault(barAndBeerInfo => barAndBeerInfo.BarId == barId 
+                                                                    && barAndBeerInfo.BeerId == beerId);
             return exists != null ? true : false;
         }
     }

@@ -1,45 +1,43 @@
-﻿using BeerManagement.Repository.Interfaces;
+﻿using AutoMapper;
+using BeerManagement.Models;
 using BeerManagement.Repository.DatabaseContext;
-using BeerManagement.Models.DataModels;
+using BeerManagement.Repository.Interfaces;
 using BeerManagement.Services.Interfaces;
 using System.Collections.Generic;
-using AutoMapper;
-
 namespace BeerManagement.Services.Services
 {
     public class BarService : IBarService
     {
         private readonly IUnitOfWork<Bars> unitOfWork;
         private readonly IMapper mapper;
-
         public BarService(IUnitOfWork<Bars> unitOfWork, IMapper autoMapper)
         {
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
-        public List<BarModel> GetAllBars()
+        public List<BarModel> AllBars()
         {
-            var getAllBars = unitOfWork.GenericRepository.GetAllEntityRecords();
-            return mapper.Map<List<BarModel>>(getAllBars);
+            var allBars = unitOfWork.GenericRepository.AllEntityRecords();
+            return mapper.Map<List<BarModel>>(allBars);
         }
 
-        public BarModel GetBarDetailsById(int id)
+        public BarModel BarDetailsById(int id)
         {
-            var getBarDetailsById = unitOfWork.GenericRepository.GetEntityDetailsById(id);
-            return mapper.Map<BarModel>(getBarDetailsById);
+            var barDetailsById = unitOfWork.GenericRepository.EntityDetailsById(id);
+            return mapper.Map<BarModel>(barDetailsById);
         }
 
-        public bool SaveNewBarDetails(BarModel barInfo, out string statusMessage)
+        public bool NewBar(BarModel barInfo, out string statusMessage)
         {
             barInfo.BarId = 0;
             var newBarInfo = mapper.Map<Bars>(barInfo);
-            return unitOfWork.GenericRepository.SaveNewRecord(newBarInfo, out statusMessage);
+            return unitOfWork.GenericRepository.NewRecord(newBarInfo, out statusMessage);
         }
 
-        public bool UpdateBarDetails(BarModel barInfo, out string statusMessage)
+        public bool BarDetailsUpdate(BarModel barInfo, out string statusMessage)
         {
             var updatedbarInfo = mapper.Map<Bars>(barInfo);
-            return unitOfWork.GenericRepository.UpdateEntityRecord(updatedbarInfo, updatedbarInfo.BarId, out statusMessage);
+            return unitOfWork.GenericRepository.EntityRecordUpdate(updatedbarInfo, updatedbarInfo.BarId, out statusMessage);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace BeerManagement.Repository.Repository
 {
@@ -18,21 +18,21 @@ namespace BeerManagement.Repository.Repository
             _dbset = _dbContext.Set<T>();
         }
 
-        public List<T> GetAllEntityRecords()
+        public List<T> AllEntityRecords()
         {
             var getAllEntityRecords = _dbset.ToList();
 
             return getAllEntityRecords;
         }
 
-        public T GetEntityDetailsById(int id)
+        public T EntityDetailsById(int id)
         {
             var getDetailsById = _dbset.Find(id);
 
             return getDetailsById;
         }
 
-        public bool SaveNewRecord(T entity, out string statusMessage)
+        public bool NewRecord(T entity, out string statusMessage)
         {
             try
             {
@@ -41,14 +41,14 @@ namespace BeerManagement.Repository.Repository
                 statusMessage = "Record created successfully";
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 statusMessage = "Error occured while creating the record. " + ex.InnerException.Message;
                 return false;
             }
         }
 
-        public bool UpdateEntityRecord(T entity, int id,out string statusMessage)
+        public bool EntityRecordUpdate(T entity, int id, out string statusMessage)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace BeerManagement.Repository.Repository
             {
                 statusMessage = "Error occured while saving the record to the database. " + ex.InnerException.Message;
                 return false;
-            }            
+            }
         }
     }
 }

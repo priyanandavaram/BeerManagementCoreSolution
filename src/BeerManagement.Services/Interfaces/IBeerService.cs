@@ -1,14 +1,12 @@
-﻿using BeerManagement.Models.DataModels;
+﻿using BeerManagement.Models;
 using System.Collections.Generic;
-using System.Text;
-
 namespace BeerManagement.Services.Interfaces
 {
     public interface IBeerService
     {
-        BeerModel GetBeerDetailsById(int id);
-        List<BeerModel> GetAllBeersByAlchoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume);
-        bool UpdateBeerDetails(BeerModel beerInfo, out string statusMessage);
-        bool SaveNewBeerDetails(BeerModel beerInfo, out string statusMessage);
+        BeerModel BeerDetailsById(int id);
+        List<BeerModel> AllBeersByAlchoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume);
+        bool BeerDetailsUpdate(BeerModel beerInfo, out string statusMessage);
+        bool NewBeer(BeerModel beerInfo, out string statusMessage);
     }
 }

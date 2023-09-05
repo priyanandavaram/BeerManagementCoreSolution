@@ -1,47 +1,43 @@
-﻿using BeerManagement.Repository.Interfaces;
-using BeerManagement.Services.Automapper;
+﻿using AutoMapper;
+using BeerManagement.Models;
 using BeerManagement.Repository.DatabaseContext;
+using BeerManagement.Repository.Interfaces;
 using BeerManagement.Services.Interfaces;
-using BeerManagement.Models.DataModels;
 using System.Collections.Generic;
-using AutoMapper;
-
 namespace BeerManagement.Services.Services
 {
     public class BreweryService : IBreweryService
     {
         private readonly IUnitOfWork<Brewery> unitOfWork;
         private readonly IMapper mapper;
-
-
         public BreweryService(IUnitOfWork<Brewery> unitOfWork, IMapper autoMapper)
         {
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
-        public List<BreweryModel> GetAllBreweries()
+        public List<BreweryModel> AllBreweries()
         {
-            var getAllBreweries = unitOfWork.GenericRepository.GetAllEntityRecords();
-            return mapper.Map<List<BreweryModel>>(getAllBreweries);
+            var allBreweries = unitOfWork.GenericRepository.AllEntityRecords();
+            return mapper.Map<List<BreweryModel>>(allBreweries);
         }
 
-        public BreweryModel GetBreweryDetailsById(int id)
+        public BreweryModel BreweryDetailsById(int id)
         {
-            var getBreweryDetailsById = unitOfWork.GenericRepository.GetEntityDetailsById(id);
-            return mapper.Map<BreweryModel>(getBreweryDetailsById);
+            var breweryDetailsById = unitOfWork.GenericRepository.EntityDetailsById(id);
+            return mapper.Map<BreweryModel>(breweryDetailsById);
         }
 
-        public bool SaveNewBreweryDetails(BreweryModel createNewBrewery, out string statusMessage)
+        public bool NewBrewery(BreweryModel breweryInfo, out string statusMessage)
         {
-            createNewBrewery.BreweryId = 0;
-            var newBrewery = mapper.Map<Brewery>(createNewBrewery);
-            return unitOfWork.GenericRepository.SaveNewRecord(newBrewery, out statusMessage);
+            breweryInfo.BreweryId = 0;
+            var newBrewery = mapper.Map<Brewery>(breweryInfo);
+            return unitOfWork.GenericRepository.NewRecord(newBrewery, out statusMessage);
         }
 
-        public bool UpdateBreweryDetails(BreweryModel updateBreweryDetails, out string statusMessage)
+        public bool BreweryDetailsUpdate(BreweryModel breweryInfo, out string statusMessage)
         {
-            var updateBrewery = mapper.Map<Brewery>(updateBreweryDetails);
-            return unitOfWork.GenericRepository.UpdateEntityRecord(updateBrewery, updateBrewery.BreweryId, out statusMessage);
+            var updateBreweryInfo = mapper.Map<Brewery>(breweryInfo);
+            return unitOfWork.GenericRepository.EntityRecordUpdate(updateBreweryInfo, updateBreweryInfo.BreweryId, out statusMessage);
         }
     }
 }

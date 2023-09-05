@@ -1,8 +1,7 @@
-﻿using BeerManagement.Services.Interfaces;
-using BeerManagement.Models.DataModels;
+﻿using BeerManagement.Models;
+using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
-
 namespace BeerManagement.Web
 {
     [ApiController]
@@ -16,7 +15,7 @@ namespace BeerManagement.Web
         }
         [HttpPost]
         [Route("beer")]
-        public IActionResult LinkBarAndBeer([FromBody] BarAndBeerModel barAndBeer)
+        public IActionResult BarAndBeerLink([FromBody] BarAndBeerModel barAndBeer)
         {
             if (barAndBeer == null)
             {
@@ -26,28 +25,27 @@ namespace BeerManagement.Web
             {
                 return SendReponse.BadRequest();
             }
-            var result = _barAndBeerService.LinkBarAndBeer(barAndBeer, out string statusMessage);
-
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);            
+            var result = _barAndBeerService.BarAndBeerLink(barAndBeer, out string statusMessage);
+            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
+
         [HttpGet]
         [Route("{barId:int}/beer")]
-        public IActionResult GetAllBeersAssociatedWithBar(int barId)
+        public IActionResult BeersAssociatedWithBar(int barId)
         {
             if (barId <= 0)
             {
                 return SendReponse.BadRequestObjectResult("BarId");
             }
-            var result = _barAndBeerService.GetAllBeersAssociatedWithBar(barId);
-
+            var result = _barAndBeerService.BeersAssociatedWithBar(barId);
             return SendReponse.ReturnResponse(result);
         }
+
         [HttpGet]
         [Route("beer")]
-        public IActionResult GetAllBarsWithAssociatedBeers()
+        public IActionResult BarsWithAssociatedBeers()
         {
-            var result = _barAndBeerService.GetAllBarsWithAssociatedBeers();
-
+            var result = _barAndBeerService.BarsWithAssociatedBeers();
             return SendReponse.ReturnResponse(result);
         }
     }

@@ -14,15 +14,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2158EE31-46C5-47E1-AFB8-8AC987A87219}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerManagement.Services", "src\BeerManagement.Services\BeerManagement.Services.csproj", "{E3F26C23-F6A4-43FA-8377-A9D37F734A0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeerManagement.Services", "src\BeerManagement.Services\BeerManagement.Services.csproj", "{E3F26C23-F6A4-43FA-8377-A9D37F734A0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerManagement.Models", "src\BeerManagement.Models\BeerManagement.Models.csproj", "{1461E4D6-9D7C-4673-BBBE-CF5A58ED4AF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeerManagement.Models", "src\BeerManagement.Models\BeerManagement.Models.csproj", "{1461E4D6-9D7C-4673-BBBE-CF5A58ED4AF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerManagement.Repository", "src\BeerManagement.Repository\BeerManagement.Repository.csproj", "{A90B488D-0081-45BE-9207-08BDDB5ED9FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeerManagement.Repository", "src\BeerManagement.Repository\BeerManagement.Repository.csproj", "{A90B488D-0081-45BE-9207-08BDDB5ED9FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerManagement.Web.Controllers.Test", "tests\BeerManagement.Web.Controllers.Test\BeerManagement.Web.Controllers.Test.csproj", "{EECA18F1-6B5D-4378-AE42-3B5D7E1F2AD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeerManagement.Web.Controllers.Test", "tests\BeerManagement.Web.Controllers.Test\BeerManagement.Web.Controllers.Test.csproj", "{EECA18F1-6B5D-4378-AE42-3B5D7E1F2AD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerManagement.Web.Services.Test", "tests\BeerManagement.Web.Services.Test\BeerManagement.Web.Services.Test.csproj", "{33EF4C72-BD22-4B6C-8724-ADDF9CB33AD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeerManagement.Web.Services.Test", "tests\BeerManagement.Web.Services.Test\BeerManagement.Web.Services.Test.csproj", "{33EF4C72-BD22-4B6C-8724-ADDF9CB33AD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

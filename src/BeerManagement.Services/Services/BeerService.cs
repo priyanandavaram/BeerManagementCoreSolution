@@ -1,10 +1,9 @@
-﻿using BeerManagement.Repository.Interfaces;
+﻿using AutoMapper;
+using BeerManagement.Models;
 using BeerManagement.Repository.DatabaseContext;
-using BeerManagement.Models.DataModels;
+using BeerManagement.Repository.Interfaces;
 using BeerManagement.Services.Interfaces;
 using System.Collections.Generic;
-using AutoMapper;
-
 namespace BeerManagement.Services.Services
 {
     public class BeerService : IBeerService
@@ -16,29 +15,29 @@ namespace BeerManagement.Services.Services
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
-        public List<BeerModel> GetAllBeersByAlchoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
+        public List<BeerModel> AllBeersByAlchoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
         {
-            var getBeersByAlcoholLevel = unitOfWork.BeerRepository.GetAllBeersByAlchoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
-            return mapper.Map<List<BeerModel>>(getBeersByAlcoholLevel);
+            var beersByAlcoholLevel = unitOfWork.BeerRepository.AllBeersByAlchoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
+            return mapper.Map<List<BeerModel>>(beersByAlcoholLevel);
         }
 
-        public BeerModel GetBeerDetailsById(int id)
+        public BeerModel BeerDetailsById(int id)
         {
-            var getBeerDetailsById = unitOfWork.GenericRepository.GetEntityDetailsById(id);
-            return mapper.Map<BeerModel>(getBeerDetailsById);
+            var beerDetailsById = unitOfWork.GenericRepository.EntityDetailsById(id);
+            return mapper.Map<BeerModel>(beerDetailsById);
         }
 
-        public bool SaveNewBeerDetails(BeerModel beerInfo, out string statusMessage)
+        public bool NewBeer(BeerModel beerInfo, out string statusMessage)
         {
             beerInfo.BeerId = 0;
             var newBeerInfo = mapper.Map<Beers>(beerInfo);
-            return unitOfWork.GenericRepository.SaveNewRecord(newBeerInfo, out statusMessage);
+            return unitOfWork.GenericRepository.NewRecord(newBeerInfo, out statusMessage);
         }
 
-        public bool UpdateBeerDetails(BeerModel beerInfo, out string statusMessage)
+        public bool BeerDetailsUpdate(BeerModel beerInfo, out string statusMessage)
         {
             var updatedBeerInfo = mapper.Map<Beers>(beerInfo);
-            return unitOfWork.GenericRepository.UpdateEntityRecord(updatedBeerInfo, updatedBeerInfo.BeerId, out statusMessage);
+            return unitOfWork.GenericRepository.EntityRecordUpdate(updatedBeerInfo, updatedBeerInfo.BeerId, out statusMessage);
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using BeerManagement.Services.Interfaces;
-using BeerManagement.Models.DataModels;
+﻿using BeerManagement.Models;
+using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
-
 namespace BeerManagement.Web
 {
     [ApiController]
@@ -16,43 +15,41 @@ namespace BeerManagement.Web
         }
         [HttpGet]
         [Route("{id:int}")]
-        public IActionResult GetBreweryDetailsById(int id)
+        public IActionResult BreweryDetailsById(int id)
         {
             if (id <= 0)
             {
                 return SendReponse.BadRequestObjectResult("BreweryId");
             }
-            var result = _breweryService.GetBreweryDetailsById(id);
-
+            var result = _breweryService.BreweryDetailsById(id);
             return SendReponse.ReturnResponse(result);
         }
+
         [HttpGet]
-        public IActionResult GetAllBreweries()
+        public IActionResult AllBreweries()
         {
-            var result = _breweryService.GetAllBreweries();
-
+            var result = _breweryService.AllBreweries();
             return SendReponse.ReturnResponse(result);
         }
+
         [HttpPut]
         [Route("{id:int}")]
-        public IActionResult UpdateBreweryDetails(int id, [FromBody] BreweryModel breweryInfo)
+        public IActionResult BreweryDetailsUpdate(int id, [FromBody] BreweryModel breweryInfo)
         {
-            if(breweryInfo == null)
-            {
-                return SendReponse.BadRequest();
-            }  
-            
-            if(id != breweryInfo.BreweryId || string.IsNullOrEmpty(breweryInfo.BreweryName) || id<=0 )
+            if (breweryInfo == null)
             {
                 return SendReponse.BadRequest();
             }
-
-            var result = _breweryService.UpdateBreweryDetails(breweryInfo, out string statusMessage);
-
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);            
+            if (id != breweryInfo.BreweryId || string.IsNullOrEmpty(breweryInfo.BreweryName) || id <= 0)
+            {
+                return SendReponse.BadRequest();
+            }
+            var result = _breweryService.BreweryDetailsUpdate(breweryInfo, out string statusMessage);
+            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
+
         [HttpPost]
-        public IActionResult SaveNewBreweryDetails([FromBody] BreweryModel breweryInfo)
+        public IActionResult NewBrewery([FromBody] BreweryModel breweryInfo)
         {
             if (breweryInfo == null)
             {
@@ -62,9 +59,7 @@ namespace BeerManagement.Web
             {
                 return SendReponse.BadRequest();
             }
-
-            var result = _breweryService.SaveNewBreweryDetails(breweryInfo, out string statusMessage);
-            
+            var result = _breweryService.NewBrewery(breweryInfo, out string statusMessage);
             return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
     }

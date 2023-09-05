@@ -1,9 +1,7 @@
-﻿using BeerManagement.Services.Interfaces;
-using BeerManagement.Models.DataModels;
+﻿using BeerManagement.Models;
+using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
-using System;
-
 namespace BeerManagement.Web
 {
     [ApiController]
@@ -11,54 +9,47 @@ namespace BeerManagement.Web
     public class BreweryAndBeerController
     {
         private readonly IBreweryAndBeerService _breweryAndBeerService;
-
         public BreweryAndBeerController(IBreweryAndBeerService breweryAndBeerService)
         {
-            _breweryAndBeerService = breweryAndBeerService;  
+            _breweryAndBeerService = breweryAndBeerService;
         }
-
         [HttpPost]
         [Route("beer")]
-        public IActionResult LinkBreweryAndBeer([FromBody] BreweryAndBeerModel breweryAndBeer)
+        public IActionResult BreweryAndBeerLink([FromBody] BreweryAndBeerModel breweryAndBeer)
         {
-            if(breweryAndBeer == null)
+            if (breweryAndBeer == null)
             {
                 return SendReponse.BadRequest();
             }
-            if(breweryAndBeer.BreweryId <=0 || breweryAndBeer.BeerId <= 0)
+            if (breweryAndBeer.BreweryId <= 0 || breweryAndBeer.BeerId <= 0)
             {
                 return SendReponse.BadRequest();
             }
-            var result = _breweryAndBeerService.LinkBreweryAndBeer(breweryAndBeer, out string statusMessage);
+            var result = _breweryAndBeerService.BreweryAndBeerLink(breweryAndBeer, out string statusMessage);
 
-            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);            
+            return SendReponse.ReturnResponseByBooleanValue(result, statusMessage);
         }
+
         [HttpGet]
         [Route("{breweryId:int}/beer")]
-        public IActionResult GetAllBeersAssociatedWithBrewery(int breweryId)
+        public IActionResult AllBeersAssociatedWithBrewery(int breweryId)
         {
             if (breweryId <= 0)
             {
                 return SendReponse.BadRequestObjectResult("BreweryId");
             }
-            var result = _breweryAndBeerService.GetAllBeersAssociatedWithBrewery(breweryId);
+            var result = _breweryAndBeerService.AllBeersAssociatedWithBrewery(breweryId);
 
-            return SendReponse.ReturnResponse(result);            
+            return SendReponse.ReturnResponse(result);
         }
+
         [HttpGet]
         [Route("beer")]
-        public IActionResult GetAllBreweriesWithAssociatedBeers()
+        public IActionResult AllBreweriesWithAssociatedBeers()
         {
-            try
-            {
-                var result = _breweryAndBeerService.GetAllBreweriesWithAssociatedBeers();
+            var result = _breweryAndBeerService.AllBreweriesWithAssociatedBeers();
 
-                return SendReponse.ReturnResponse(result);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return SendReponse.ReturnResponse(result);
         }
     }
 }

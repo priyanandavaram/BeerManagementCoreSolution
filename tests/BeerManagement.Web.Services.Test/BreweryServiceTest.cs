@@ -1,14 +1,14 @@
-﻿using BeerManagement.Repository.DatabaseContext;
-using BeerManagement.Repository.UnitOfWork;
-using BeerManagement.Services.Services;
-using BeerManagement.Services.Interfaces;
-using BeerManagement.Models.DataModels;
+﻿using AutoMapper;
+using BeerManagement.Models;
+using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
+using BeerManagement.Repository.UnitOfWork;
+using BeerManagement.Services.Interfaces;
+using BeerManagement.Services.Services;
 using BeerManagement.Web.Services.Test.Common;
 using BeerManagement.Web.Services.Test.TestHelper;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using Xunit;
 namespace BeerManagement.Web.Services.Test
 {
@@ -20,7 +20,6 @@ namespace BeerManagement.Web.Services.Test
         private IBreweryService _breweryService;
         private readonly IMapper mapper;
         private AppDbContext _dbContext;
-
         public BreweryServiceTest(AppDbContextFixture fixture)
         {
             _fixture = fixture;
@@ -33,52 +32,50 @@ namespace BeerManagement.Web.Services.Test
             _breweryService = new BreweryService(IunitOfWork, mapper);
         }
         [Fact]
-        public void GetAllBrewery_ShouldReturnData_Service()
+        public void AllBrewery_ShouldReturnData_Service()
         {
-            List<BreweryModel> getAllBreweryDetails = _breweryService.GetAllBreweries();
-
-            Assert.NotNull(getAllBreweryDetails);
-            Assert.True(getAllBreweryDetails.Count > 4);
+            List<BreweryModel> allBreweryDetails = _breweryService.AllBreweries();
+            Assert.NotNull(allBreweryDetails);
+            Assert.True(allBreweryDetails.Count > 4);
         }
 
         [Fact]
-        public void GetBreweryDetailsById_ShouldReturnData_Service()
+        public void BreweryDetailsById_ShouldReturnData_Service()
         {
-            BreweryModel getBreweryDetailsById = _breweryService.GetBreweryDetailsById(4);
-
-            Assert.NotNull(getBreweryDetailsById);
-            Assert.True(getBreweryDetailsById.BreweryId == 4);
-            Assert.True(getBreweryDetailsById.BreweryName == "United Beverages-Leeds");
-        }
-        [Fact]
-        public void GetBreweryDetailsById_ShouldNotReturnData_Service()
-        {
-            BreweryModel getBreweryDetailsById = _breweryService.GetBreweryDetailsById(14);
-
-            Assert.Null(getBreweryDetailsById);
+            BreweryModel breweryDetailsById = _breweryService.BreweryDetailsById(4);
+            Assert.NotNull(breweryDetailsById);
+            Assert.True(breweryDetailsById.BreweryId == 4);
+            Assert.True(breweryDetailsById.BreweryName == "New Belgium Brewing Company");
         }
 
         [Fact]
-        public void UpdateBreweryDetails_ShouldUpdateRecord_Service()
+        public void BreweryDetailsById_ShouldNot_ReturnData_Service()
         {
-            var getResult = _breweryService.UpdateBreweryDetails(StubDataForService.InitializeBreweryInfo(3, "United Beverages- Central London"), out string statusMessage);
-            BreweryModel checkUpdatedInfo = mapper.Map<BreweryModel>(_dbContext.Brewery.FirstOrDefault(x => x.BreweryId == 3));
-
-            Assert.True(getResult);
-            Assert.NotNull(checkUpdatedInfo);
-            Assert.True(checkUpdatedInfo.BreweryId == 3);
-            Assert.True(checkUpdatedInfo.BreweryName == "United Beverages- Central London");
+            BreweryModel breweryDetailsById = _breweryService.BreweryDetailsById(14);
+            Assert.Null(breweryDetailsById);
         }
 
         [Fact]
-        public void SaveNewBreweryDetails_Success_Service()
+        public void BreweryDetailsUpdate_ShouldUpdateRecord_Service()
         {
-            var createNewBrewery = _breweryService.SaveNewBreweryDetails(StubDataForService.InitializeBreweryInfo( 0, "United Beverages"), out string statusMessage);
-            BreweryModel checkInfoForNewId = mapper.Map<BreweryModel>(_dbContext.Brewery.FirstOrDefault(x => x.BreweryName == "United Beverages"));
+            var result = _breweryService.BreweryDetailsUpdate(StubDataForService.InitializeBreweryInfo(3, "Stella London Inc.")
+                                                                , out string statusMessage);
+            BreweryModel updatedInfo = mapper.Map<BreweryModel>(_dbContext.Brewery.FirstOrDefault(breweryInfo => breweryInfo.BreweryId == 3));
+            Assert.True(result);
+            Assert.NotNull(updatedInfo);
+            Assert.True(updatedInfo.BreweryId == 3);
+            Assert.True(updatedInfo.BreweryName == "Stella London Inc.");
+        }
 
-            Assert.True(createNewBrewery);
-            Assert.NotNull(checkInfoForNewId);
-            Assert.True(checkInfoForNewId.BreweryId > 0);
+        [Fact]
+        public void NewBrewery_Success_Service()
+        {
+            var newBrewery = _breweryService.NewBrewery(StubDataForService.InitializeBreweryInfo(0, "Inc 5 Corporation")
+                                                        , out string statusMessage);
+            BreweryModel savedInfo = mapper.Map<BreweryModel>(_dbContext.Brewery.FirstOrDefault(x => x.BreweryName == "Inc 5 Corporation"));
+            Assert.True(newBrewery);
+            Assert.NotNull(savedInfo);
+            Assert.True(savedInfo.BreweryId > 0);
         }
     }
 }

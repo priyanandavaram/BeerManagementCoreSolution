@@ -1,56 +1,43 @@
-﻿using BeerManagement.Web.Controllers.Test.TestHelper;
-using BeerManagement.Services.Interfaces;
+﻿using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
-using Xunit;
+using BeerManagement.Web.Controllers.Test.TestHelper;
 using Moq;
-
-
+using Xunit;
 namespace BeerManagement.Web.Controllers.Test
 {
     public class BreweryAndBeerControllerTest
     {
         private readonly Mock<IBreweryAndBeerService> _breweryAndBeerService;
-
         private readonly BreweryAndBeerController _breweryAndBeerController;
-
         public string statusMessage = "";
-
         public BreweryAndBeerControllerTest()
         {
             _breweryAndBeerService = new Mock<IBreweryAndBeerService>();
-
             _breweryAndBeerController = new BreweryAndBeerController(_breweryAndBeerService.Object);
         }
         [Fact]
-        public void LinkBreweryAndBeer_Success_Controller()
+        public void BreweryAndBeerLink_Success_Controller()
         {
-            var breweryDetails = StubDataForController.BreweryAndBeerInfo();
-
-            _breweryAndBeerService.Setup(x => x.LinkBreweryAndBeer(breweryDetails, out statusMessage)).Returns(true);
-
-            var getBreweryAndBeerDetails = _breweryAndBeerController.LinkBreweryAndBeer(breweryDetails);
-
-            Assert.True(getBreweryAndBeerDetails.GetType().FullName == SendReponse.ApiResponse(getBreweryAndBeerDetails).ToString());
+            var breweryAndBeer = StubDataForController.BreweryAndBeerInfo();
+            _breweryAndBeerService.Setup(x => x.BreweryAndBeerLink(breweryAndBeer, out statusMessage)).Returns(true);
+            var result = _breweryAndBeerController.BreweryAndBeerLink(breweryAndBeer);
+            Assert.True(result.GetType().FullName == SendReponse.ApiResponse(result).ToString());
         }
+
         [Fact]
-        public void GetAllBeersAssociatedWithBrewery_ShouldReturnData_Controller()
+        public void AllBeersAssociatedWithBrewery_ShouldReturnData_Controller()
         {
-            _breweryAndBeerService.Setup(x => x.GetAllBeersAssociatedWithBrewery(1)).Returns(StubDataForController.GetBreweryAndBeerDetailsById());
-
-            var getBreweryAndBeerDetailsById = _breweryAndBeerController.GetAllBeersAssociatedWithBrewery(1);
-
-            Assert.True(getBreweryAndBeerDetailsById.GetType().FullName == SendReponse.ApiResponse(getBreweryAndBeerDetailsById).ToString());
+            _breweryAndBeerService.Setup(x => x.AllBeersAssociatedWithBrewery(1)).Returns(StubDataForController.BreweryAndBeerDetailsById());
+            var breweryAndAssociatedBeers = _breweryAndBeerController.AllBeersAssociatedWithBrewery(1);
+            Assert.True(breweryAndAssociatedBeers.GetType().FullName == SendReponse.ApiResponse(breweryAndAssociatedBeers).ToString());
         }
+
         [Fact]
-        public void GetAllBreweriesWithAssociatedBeers_ShouldReturnData_Controller()
+        public void AllBreweriesWithAssociatedBeers_ShouldReturnData_Controller()
         {
-            var breweryDetails = StubDataForController.BreweryAndBeerInfo();
-
-            _breweryAndBeerService.Setup(x => x.GetAllBreweriesWithAssociatedBeers()).Returns(StubDataForController.GetBreweryAndBeerDetails());
-
-            var getBreweryAndBeerDetails= _breweryAndBeerController.GetAllBreweriesWithAssociatedBeers();
-
-            Assert.True(getBreweryAndBeerDetails.GetType().FullName == SendReponse.ApiResponse(getBreweryAndBeerDetails).ToString());
+            _breweryAndBeerService.Setup(x => x.AllBreweriesWithAssociatedBeers()).Returns(StubDataForController.BreweryAndAssociatedBeers());
+            var breweryAndAssociatedBeers = _breweryAndBeerController.AllBreweriesWithAssociatedBeers();
+            Assert.True(breweryAndAssociatedBeers.GetType().FullName == SendReponse.ApiResponse(breweryAndAssociatedBeers).ToString());
         }
     }
 }
