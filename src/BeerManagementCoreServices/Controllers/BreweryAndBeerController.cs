@@ -62,7 +62,7 @@ namespace BeerManagement.Web
             {
                 return false;
             }
-            if (breweryAndBeer.BreweryId <= 0 || breweryAndBeer.BeerId <= 0)
+            if (breweryAndBeer.BreweryId < 1 || breweryAndBeer.BeerId < 1)
             {
                 return false;
             }

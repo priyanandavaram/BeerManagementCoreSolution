@@ -62,11 +62,11 @@ namespace BeerManagement.Web
             {
                 return false;
             }
-            else if (barAndBeer.BarId <= 0)
+            else if (barAndBeer.BarId < 1)
             {
                 return false;
             }
-            else if (barAndBeer.BeerId <= 0)
+            else if (barAndBeer.BeerId < 1)
             {
                 return false;
             }

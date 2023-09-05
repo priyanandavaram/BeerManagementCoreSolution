@@ -51,10 +51,10 @@ namespace BeerManagement.Web.Services.Test
         public void BarAndBeerLink_Success_Service()
         {
             var barAndBeerInfo = StubDataForService.InitializeBarAndBeerInfo(2, 4);
-            var getResult = _barAndBeerService.BarAndBeerLink(barAndBeerInfo, out string statusMessage);
+            var result = _barAndBeerService.BarAndBeerLink(barAndBeerInfo, out string statusMessage);
             var checkIfLinkExists = _dbContext.LinkBarWithBeer.FirstOrDefault(barAndBeer => barAndBeer.BarId == barAndBeerInfo.BarId
                                                                             & barAndBeer.BeerId == barAndBeerInfo.BeerId);
-            Assert.True(getResult);
+            Assert.True(result);
             Assert.NotNull(checkIfLinkExists);
         }
 
@@ -62,10 +62,10 @@ namespace BeerManagement.Web.Services.Test
         public void LinkBarAndBeer_ValidationCheck_Link_Exists_Service()
         {
             var barAndBeerInfo = StubDataForService.InitializeBarAndBeerInfo(3, 4);
-            var getResult = _barAndBeerService.BarAndBeerLink(barAndBeerInfo, out string statusMessage);
+            var result = _barAndBeerService.BarAndBeerLink(barAndBeerInfo, out string statusMessage);
             var checkIfLinkExists = _dbContext.LinkBarWithBeer.FirstOrDefault(barAndBeer => barAndBeer.BarId == barAndBeerInfo.BarId
                                                                             & barAndBeer.BeerId == barAndBeerInfo.BeerId);
-            Assert.False(getResult);
+            Assert.False(result);
             Assert.NotNull(checkIfLinkExists);
         }
     }

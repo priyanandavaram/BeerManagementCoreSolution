@@ -37,7 +37,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void GetAllBars_NoData_Controller()
+        public void AllBars_NoData_Controller()
         {
             List<BarModel> bars = new List<BarModel>();
             bars = null;
@@ -47,7 +47,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void GetAllBars_ShouldReturnData_Controller()
+        public void AllBars_ShouldReturnData_Controller()
         {
             var barDetails = StubDataForController.BarDetails();
             _barService.Setup(x => x.AllBars()).Returns(barDetails);
@@ -77,8 +77,8 @@ namespace BeerManagement.Web.Controllers.Test
         {
             var updateBarInfo = StubDataForController.InitializeBarData(10, "London Bar & Pub & Chips", "Leeds");
             _barService.Setup(x => x.BarDetailsUpdate(updateBarInfo, out statusMessage)).Returns(true);
-            var getResult = _barController.BarDetailsUpdate(10, updateBarInfo);
-            Assert.True(getResult.GetType().FullName == SendReponse.ApiResponse(getResult).ToString());
+            var result = _barController.BarDetailsUpdate(10, updateBarInfo);
+            Assert.True(result.GetType().FullName == SendReponse.ApiResponse(result).ToString());
         }
 
         [Fact]
@@ -86,16 +86,16 @@ namespace BeerManagement.Web.Controllers.Test
         {
             var newRecord = StubDataForController.InitializeBarData(6, "Hilife Bar & Pub", "Leeds High Street");
             _barService.Setup(x => x.NewBar(newRecord, out statusMessage)).Returns(true);
-            var getResult = _barController.NewBar(newRecord);
-            Assert.True(getResult.GetType().FullName == SendReponse.ApiResponse(true).ToString());
+            var result = _barController.NewBar(newRecord);
+            Assert.True(result.GetType().FullName == SendReponse.ApiResponse(true).ToString());
         }
 
         [Fact]
         public void SaveNewBarDetails_ValidationFail_BarName_Not_exists_Controller()
         {
             var newRecord = StubDataForController.InitializeBarData(7, "", "London Kings Cross");
-            var getResult = _barController.NewBar(newRecord);
-            Assert.True(getResult.GetType().FullName == SendReponse.BadRequest().ToString());
+            var result = _barController.NewBar(newRecord);
+            Assert.True(result.GetType().FullName == SendReponse.BadRequest().ToString());
         }
     }
 }

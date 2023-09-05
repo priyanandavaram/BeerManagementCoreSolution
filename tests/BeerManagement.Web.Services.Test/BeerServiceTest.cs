@@ -44,9 +44,9 @@ namespace BeerManagement.Web.Services.Test
         public void AllBeersByAlcoholVolume_ShouldReturnData_WithOptionalParams_Service()
         {
             List<BeerModel> beerDetails = _beerService.AllBeersByAlchoholPercentage(0, 0);
-            var getCount = _dbContext.Beers.Count();
+            var beerCount = _dbContext.Beers.Count();
             Assert.NotNull(beerDetails);
-            Assert.True(beerDetails.Count() == getCount);
+            Assert.True(beerDetails.Count() == beerCount);
             Assert.True((beerDetails.Any(beerInfo => beerInfo.PercentageAlcoholByVolume > 40 && beerInfo.PercentageAlcoholByVolume < 10) == false));
         }
 
@@ -70,9 +70,9 @@ namespace BeerManagement.Web.Services.Test
         public void BeerDetailsUpdate_ShouldUpdateRecord_Service()
         {
             var beerInfo = StubDataForService.InitializeBeerInfo(9, "Cruise Manie Co.", 16.18M);
-            var getBeerDetailsById = _beerService.BeerDetailsUpdate(beerInfo, out string statusMessage);
+            var beerDetailsById = _beerService.BeerDetailsUpdate(beerInfo, out string statusMessage);
             BeerModel updatedInfo = mapper.Map<BeerModel>(_dbContext.Beers.FirstOrDefault(beers => beers.BeerId == 9));
-            Assert.True(getBeerDetailsById);
+            Assert.True(beerDetailsById);
             Assert.NotNull(updatedInfo);
             Assert.True(updatedInfo.BeerName == beerInfo.BeerName);
             Assert.True(updatedInfo.PercentageAlcoholByVolume == beerInfo.PercentageAlcoholByVolume);
