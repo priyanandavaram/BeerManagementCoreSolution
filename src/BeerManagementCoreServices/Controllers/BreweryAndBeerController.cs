@@ -2,6 +2,7 @@
 using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
+
 namespace BeerManagement.Web
 {
     [ApiController]
@@ -13,6 +14,7 @@ namespace BeerManagement.Web
         {
             _breweryAndBeerService = breweryAndBeerService;
         }
+
         [HttpPost]
         [Route("beer")]
         public IActionResult BreweryAndBeerLink([FromBody] BreweryAndBeerModel breweryAndBeer)
@@ -26,17 +28,14 @@ namespace BeerManagement.Web
                 }
                 return SendReponse.BadRequestObjectResult(result, statusMessage);
             }
-            else
-            {
-                return SendReponse.BadRequest();
-            }
+            return SendReponse.BadRequest();
         }
 
         [HttpGet]
         [Route("{breweryId:int:min(1)}/beer")]
-        public IActionResult AllBeersAssociatedWithBrewery(int breweryId)
+        public IActionResult BeersAssociatedWithBrewery(int breweryId)
         {
-            var result = _breweryAndBeerService.AllBeersAssociatedWithBrewery(breweryId);
+            var result = _breweryAndBeerService.BeersAssociatedWithBrewery(breweryId);
             if (result != null)
             {
                 return SendReponse.ApiResponse(result);
@@ -46,9 +45,9 @@ namespace BeerManagement.Web
 
         [HttpGet]
         [Route("beer")]
-        public IActionResult AllBreweriesWithAssociatedBeers()
+        public IActionResult BreweriesWithAssociatedBeers()
         {
-            var result = _breweryAndBeerService.AllBreweriesWithAssociatedBeers();
+            var result = _breweryAndBeerService.BreweriesWithAssociatedBeers();
             if (result != null)
             {
                 return SendReponse.ApiResponse(result);

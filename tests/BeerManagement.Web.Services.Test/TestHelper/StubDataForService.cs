@@ -1,4 +1,5 @@
 ﻿using BeerManagement.Models;
+
 namespace BeerManagement.Web.Services.Test.TestHelper
 {
     public class StubDataForService

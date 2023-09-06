@@ -4,6 +4,7 @@ using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
 using BeerManagement.Services.Interfaces;
 using System.Collections.Generic;
+
 namespace BeerManagement.Services.Services
 {
     public class BeerService : IBeerService
@@ -15,9 +16,10 @@ namespace BeerManagement.Services.Services
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
-        public List<BeerModel> AllBeersByAlchoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
+
+        public List<BeerModel> AllBeersByAlcoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
         {
-            var beersByAlcoholLevel = unitOfWork.BeerRepository.AllBeersByAlchoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
+            var beersByAlcoholLevel = unitOfWork.BeerRepository.AllBeersByAlcoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
             return mapper.Map<List<BeerModel>>(beersByAlcoholLevel);
         }
 

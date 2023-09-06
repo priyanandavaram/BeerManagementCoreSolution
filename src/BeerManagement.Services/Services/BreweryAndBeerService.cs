@@ -5,6 +5,7 @@ using BeerManagement.Repository.Interfaces;
 using BeerManagement.Repository.Models;
 using BeerManagement.Services.Interfaces;
 using System.Collections.Generic;
+
 namespace BeerManagement.Services.Services
 {
     public class BreweryAndBeerService : IBreweryAndBeerService
@@ -16,15 +17,16 @@ namespace BeerManagement.Services.Services
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
-        public List<BreweryWithAssociatedBeersModel> AllBeersAssociatedWithBrewery(int breweryId)
+
+        public List<BreweryWithAssociatedBeersModel> BeersAssociatedWithBrewery(int breweryId)
         {
-            var allBeersAssociatedWithBrewery = unitOfWork.BreweryAndBeerRepository.AllBeersAssociatedWithBrewery(breweryId);
+            var allBeersAssociatedWithBrewery = unitOfWork.BreweryAndBeerRepository.BeersAssociatedWithBrewery(breweryId);
             return allBeersAssociatedWithBrewery;
         }
 
-        public List<BreweryWithAssociatedBeersModel> AllBreweriesWithAssociatedBeers()
+        public List<BreweryWithAssociatedBeersModel> BreweriesWithAssociatedBeers()
         {
-            var allBreweriesWithAssociatedBeers = unitOfWork.BreweryAndBeerRepository.AllBreweriesWithAssociatedBeers();
+            var allBreweriesWithAssociatedBeers = unitOfWork.BreweryAndBeerRepository.BreweriesWithAssociatedBeers();
             return allBreweriesWithAssociatedBeers;
         }
 

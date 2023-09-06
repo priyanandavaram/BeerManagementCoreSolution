@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+
 namespace BeerManagement.Web.Error
 {
     public class ErrorDetails

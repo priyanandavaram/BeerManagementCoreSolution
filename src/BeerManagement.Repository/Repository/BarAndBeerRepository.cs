@@ -6,6 +6,7 @@ using BeerManagement.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace BeerManagement.Repository.Repository
 {
     public class BarAndBeerRepository : IBarAndBeerRepository
@@ -17,6 +18,7 @@ namespace BeerManagement.Repository.Repository
             _dbContext = dbContext;
             mapper = autoMapper;
         }
+
         public List<BarsWithAssociatedBeersModel> BarsWithAssociatedBeers()
         {
             var barsWithAssociatedBeers = _dbContext.LinkBarWithBeer.Include(allLinkedEntities => allLinkedEntities.Beer)
@@ -42,7 +44,7 @@ namespace BeerManagement.Repository.Repository
                 {
                     _dbContext.LinkBarWithBeer.Add(barAndBeerInfo);
                     _dbContext.SaveChanges();
-                    statusMessage = "Provided bar and beer Id is linked successfully";
+                    statusMessage = "Provided bar and beer Id is linked successfully.";
                     return true;
                 }
                 else
@@ -73,8 +75,8 @@ namespace BeerManagement.Repository.Repository
 
         private bool IsExist(int barId, int beerId)
         {
-            if ((_dbContext.Bars.Any(barAndBeerInfo => barAndBeerInfo.BarId == barId))
-                && (_dbContext.Beers.Any(barAndBeerInfo => barAndBeerInfo.BeerId == beerId)))
+            if (_dbContext.Bars.Any(barAndBeerInfo => barAndBeerInfo.BarId == barId)
+                && _dbContext.Beers.Any(barAndBeerInfo => barAndBeerInfo.BeerId == beerId))
             {
                 return true;
             }
@@ -86,7 +88,7 @@ namespace BeerManagement.Repository.Repository
 
         private bool IsCombinationExist(int barId, int beerId)
         {
-            var exists = _dbContext.LinkBarWithBeer.FirstOrDefault(barAndBeerInfo => barAndBeerInfo.BarId == barId 
+            var exists = _dbContext.LinkBarWithBeer.FirstOrDefault(barAndBeerInfo => barAndBeerInfo.BarId == barId
                                                                     && barAndBeerInfo.BeerId == beerId);
             return exists != null ? true : false;
         }

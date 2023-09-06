@@ -4,6 +4,7 @@ using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
 using BeerManagement.Services.Interfaces;
 using System.Collections.Generic;
+
 namespace BeerManagement.Services.Services
 {
     public class BreweryService : IBreweryService
@@ -15,6 +16,7 @@ namespace BeerManagement.Services.Services
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
+
         public List<BreweryModel> AllBreweries()
         {
             var allBreweries = unitOfWork.GenericRepository.AllEntityRecords();

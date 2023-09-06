@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 namespace BeerManagement.Repository.Interfaces
 {
     public interface IGenericRepository<entity>

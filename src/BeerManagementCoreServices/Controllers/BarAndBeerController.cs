@@ -2,6 +2,7 @@
 using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
+
 namespace BeerManagement.Web
 {
     [ApiController]
@@ -13,6 +14,7 @@ namespace BeerManagement.Web
         {
             _barAndBeerService = barAndBeerService;
         }
+
         [HttpPost]
         [Route("beer")]
         public IActionResult BarAndBeerLink([FromBody] BarAndBeerModel barAndBeer)
@@ -26,10 +28,7 @@ namespace BeerManagement.Web
                 }
                 return SendReponse.BadRequestObjectResult(result, statusMessage);
             }
-            else
-            {
-                return SendReponse.BadRequest();
-            }
+            return SendReponse.BadRequest();
         }
 
         [HttpGet]
@@ -62,11 +61,7 @@ namespace BeerManagement.Web
             {
                 return false;
             }
-            else if (barAndBeer.BarId < 1)
-            {
-                return false;
-            }
-            else if (barAndBeer.BeerId < 1)
+            else if (barAndBeer.BarId < 1 || barAndBeer.BeerId < 1)
             {
                 return false;
             }

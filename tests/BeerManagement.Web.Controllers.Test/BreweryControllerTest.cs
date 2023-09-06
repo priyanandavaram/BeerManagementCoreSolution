@@ -5,6 +5,7 @@ using BeerManagement.Web.Controllers.Test.TestHelper;
 using Moq;
 using System.Linq;
 using Xunit;
+
 namespace BeerManagement.Web.Controllers.Test
 {
     public class BreweryControllerTest
@@ -17,8 +18,9 @@ namespace BeerManagement.Web.Controllers.Test
             _breweryService = new Mock<IBreweryService>();
             _breweryController = new BreweryController(_breweryService.Object);
         }
+
         [Fact]
-        public void BreweryDetailsById_ShouldReturnData_Controller()
+        public void BreweryDetailsById_ShouldReturnBreweryDataById()
         {
             var breweryDetails = StubDataForController.BreweryDetails();
             _breweryService.Setup(x => x.BreweryDetailsById(3)).Returns(breweryDetails[2]);
@@ -27,7 +29,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BreweryDetailsById_ShouldNot_ReturnData_Controller()
+        public void BreweryDetailsById_ShouldReturnNull_WhenBreweryIdNotFound()
         {
             var breweryDetails = StubDataForController.BreweryDetails();
             _breweryService.Setup(x => x.BreweryDetailsById(10)).Returns(breweryDetails.ElementAtOrDefault(9));
@@ -36,7 +38,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void AllBrewery_ShouldReturnData_Controller()
+        public void AllBrewery_ShouldReturnAllBreweryData()
         {
             var breweryDetails = StubDataForController.BreweryDetails();
             _breweryService.Setup(x => x.AllBreweries()).Returns(breweryDetails);
@@ -45,7 +47,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BreweryDetailsUpdate_Success_Controller()
+        public void BreweryDetailsUpdate_ShouldUpdateBreweryDetails_WhenValidInputProvided()
         {
             var breweryInfo = StubDataForController.InitializeBreweryData(5, "United Beverages-Newcastle");
             _breweryService.Setup(x => x.BreweryDetailsUpdate(breweryInfo, out statusMessage)).Returns(true);
@@ -54,7 +56,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BreweryDetailsUpdate_ValidationFail_BreweryName_Not_Provided_Controller()
+        public void BreweryDetailsUpdate_ShouldReturnBadRequest_WhenBreweryNameNotProvided()
         {
             var breweryInfo = StubDataForController.InitializeBreweryData(1, "");
             var result = _breweryController.BreweryDetailsUpdate(1, breweryInfo);
@@ -62,7 +64,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BreweryDetailsUpdate_ValidationFail_BreweryId_Not_Found_Controller()
+        public void BreweryDetailsUpdate_ShouldReturnSuccess_WhenBreweryIdNotFound()
         {
             var breweryInfo = new BreweryModel { BreweryId = 10, BreweryName = "Coke" };
             _breweryService.Setup(x => x.BreweryDetailsUpdate(breweryInfo, out statusMessage)).Returns(true);
@@ -71,7 +73,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void NewBrewery_Success_Controller()
+        public void NewBrewery_ShouldReturnTrue_NewBreweryAdded()
         {
             var newBrewery = StubDataForController.InitializeBreweryData(6, "Coke Beverages");
             _breweryService.Setup(x => x.NewBrewery(newBrewery, out statusMessage)).Returns(true);
@@ -80,7 +82,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void NewBrewery_ValidationFail_BreweryName_Not_Provided_Controller()
+        public void NewBrewery_ShouldReturnBadRequest_WhenBreweryNameNotProvided()
         {
             var newBrewery = StubDataForController.InitializeBreweryData(7, "");
             var result = _breweryController.NewBrewery(newBrewery);

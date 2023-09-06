@@ -20,16 +20,16 @@ namespace BeerManagement.Repository.Repository
 
         public List<T> AllEntityRecords()
         {
-            var getAllEntityRecords = _dbset.ToList();
+            var allEntityRecords = _dbset.ToList();
 
-            return getAllEntityRecords;
+            return allEntityRecords;
         }
 
         public T EntityDetailsById(int id)
         {
-            var getDetailsById = _dbset.Find(id);
+            var entityDetailsById = _dbset.Find(id);
 
-            return getDetailsById;
+            return entityDetailsById;
         }
 
         public bool NewRecord(T entity, out string statusMessage)
@@ -38,11 +38,16 @@ namespace BeerManagement.Repository.Repository
             {
                 _dbContext.Add(entity);
                 _dbContext.SaveChanges();
-                statusMessage = "Record created successfully";
+                statusMessage = "Record created successfully.";
                 return true;
             }
             catch (Exception ex)
             {
+                if (ex.InnerException.Message.Contains("UNIQUE KEY constraint"))
+                {
+                    statusMessage = "A record with the same name already exists.";
+                    return false;
+                }
                 statusMessage = "Error occured while creating the record. " + ex.InnerException.Message;
                 return false;
             }
@@ -52,13 +57,13 @@ namespace BeerManagement.Repository.Repository
         {
             try
             {
-                var getEntityData = _dbset.Find(id);
+                var entityData = _dbset.Find(id);
 
-                if (getEntityData != null)
+                if (entityData != null)
                 {
-                    _dbContext.Entry(getEntityData).CurrentValues.SetValues(entity);
+                    _dbContext.Entry(entityData).CurrentValues.SetValues(entity);
                     _dbContext.SaveChanges();
-                    statusMessage = "Record updated successfully";
+                    statusMessage = "Record updated successfully.";
                     return true;
                 }
                 else
@@ -69,7 +74,12 @@ namespace BeerManagement.Repository.Repository
             }
             catch (Exception ex)
             {
-                statusMessage = "Error occured while saving the record to the database. " + ex.InnerException.Message;
+                if (ex.InnerException.Message.Contains("UNIQUE KEY constraint"))
+                {
+                    statusMessage = "A record with the same name already exists.";
+                    return false;
+                }
+                statusMessage = "Error occured while updating the record. " + ex.InnerException.Message;
                 return false;
             }
         }

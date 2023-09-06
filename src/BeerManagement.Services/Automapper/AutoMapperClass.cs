@@ -2,6 +2,7 @@
 using BeerManagement.Models;
 using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Models;
+
 namespace BeerManagement.Services.Automapper
 {
     public class AutoMapperClass : Profile

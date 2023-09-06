@@ -1,5 +1,6 @@
 ﻿using BeerManagement.Models;
 using System.Collections.Generic;
+
 namespace BeerManagement.Services.Interfaces
 {
     public interface IBarService

@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BeerManagement.Models\BeerManagement.Models.csproj" />
     <ProjectReference Include="..\BeerManagement.Repository\BeerManagement.Repository.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 namespace BeerManagement.Web.Common
 {
     public class SendReponse

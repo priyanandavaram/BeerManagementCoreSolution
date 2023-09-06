@@ -1,6 +1,7 @@
 ﻿using BeerManagement.Models;
 using BeerManagement.Repository.Models;
 using System.Collections.Generic;
+
 namespace BeerManagement.Web.Controllers.Test.TestHelper
 {
     public static class StubDataForController
@@ -151,9 +152,9 @@ namespace BeerManagement.Web.Controllers.Test.TestHelper
             return brewery;
         }
 
-        public static BeerModel InitializeBeerData(int beerId, string beerName, decimal AlchoholPerc)
+        public static BeerModel InitializeBeerData(int beerId, string beerName, decimal AlcoholPerc)
         {
-            BeerModel beer = new BeerModel { BeerId = beerId, BeerName = beerName, PercentageAlcoholByVolume = AlchoholPerc };
+            BeerModel beer = new BeerModel { BeerId = beerId, BeerName = beerName, PercentageAlcoholByVolume = AlcoholPerc };
             return beer;
         }
 

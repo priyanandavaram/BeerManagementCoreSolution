@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+
 namespace BeerManagement.Web.Middleware
 {
     public class ExceptionHandlerMiddleware
@@ -12,6 +13,7 @@ namespace BeerManagement.Web.Middleware
         {
             next = requestDelegate;
         }
+
         public async Task Invoke(HttpContext context)
         {
             try

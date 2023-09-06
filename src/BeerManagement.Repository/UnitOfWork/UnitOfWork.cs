@@ -2,6 +2,7 @@
 using BeerManagement.Repository.DatabaseContext;
 using BeerManagement.Repository.Interfaces;
 using BeerManagement.Repository.Repository;
+
 namespace BeerManagement.Repository.UnitOfWork
 {
     public class UnitOfWork<T> : IUnitOfWork<T> where T : class
@@ -17,6 +18,7 @@ namespace BeerManagement.Repository.UnitOfWork
             this.appDbContext = appDbContext;
             this.mapper = autoMapper;
         }
+
         public IBarAndBeerRepository BarAndBeerRepository => barAndBeerRepository ?? new BarAndBeerRepository(appDbContext, mapper);
         public IBreweryAndBeerRepository BreweryAndBeerRepository => breweryAndBeerRepository ?? new BreweryAndBeerRepository(appDbContext, mapper);
         public IGenericRepository<T> GenericRepository => genericRepository ?? new GenericRepository<T>(appDbContext);

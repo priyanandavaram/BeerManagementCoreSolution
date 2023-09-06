@@ -6,6 +6,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
+
 namespace BeerManagement.Web.Controllers.Test
 {
     public class BarControllerTest
@@ -18,8 +19,9 @@ namespace BeerManagement.Web.Controllers.Test
             _barService = new Mock<IBarService>();
             _barController = new BarController(_barService.Object);
         }
+
         [Fact]
-        public void BarDetailsById_ShouldReturnData_Controller()
+        public void BarDetailsById_ShouldReturnBarDataById()
         {
             var barDetails = StubDataForController.BarDetails();
             _barService.Setup(x => x.BarDetailsById(3)).Returns(barDetails[2]);
@@ -28,7 +30,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BarDetailsById_ShouldNot_ReturnData_Controller()
+        public void BarDetailsById_ShouldReturnNull_WhenBarIdNotFound()
         {
             var barDetails = StubDataForController.BarDetails();
             _barService.Setup(x => x.BarDetailsById(10)).Returns(barDetails.ElementAtOrDefault(9));
@@ -37,7 +39,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void AllBars_NoData_Controller()
+        public void AllBars_ShouldReturnNull_WhenNoDataIsPresent()
         {
             List<BarModel> bars = new List<BarModel>();
             bars = null;
@@ -47,7 +49,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void AllBars_ShouldReturnData_Controller()
+        public void AllBars_ShouldReturnAllBarsData()
         {
             var barDetails = StubDataForController.BarDetails();
             _barService.Setup(x => x.AllBars()).Returns(barDetails);
@@ -56,7 +58,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BarDetailsUpdate_Success_Controller()
+        public void BarDetailsUpdate_ShouldUpdateBarDetails_WhenValidInputProvided()
         {
             var barInfo = StubDataForController.InitializeBarData(2, "Griffin Pub - New", "Leeds Met Hotel");
             _barService.Setup(x => x.BarDetailsUpdate(barInfo, out statusMessage)).Returns(true);
@@ -65,7 +67,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BarDetailsUpdate_ValidationFail_BarName_Not_Provided_Controller()
+        public void BarDetailsUpdate_ShouldReturnBadRequest_WhenBarNameNotProvided()
         {
             var barInfo = StubDataForController.InitializeBarData(1, "", "London Kings Cross");
             var result = _barController.BarDetailsUpdate(1, barInfo);
@@ -73,7 +75,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void UpdateBarDetails_ValidationFail_BarId_Not_Found_Controller()
+        public void BarDetailsUpdate_ShouldReturnSuccess_WhenBarIdNotFound()
         {
             var updateBarInfo = StubDataForController.InitializeBarData(10, "London Bar & Pub & Chips", "Leeds");
             _barService.Setup(x => x.BarDetailsUpdate(updateBarInfo, out statusMessage)).Returns(true);
@@ -82,7 +84,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void SaveNewBarDetails_Success_Controller()
+        public void NewBar_ShouldReturnTrue_NewBarAdded()
         {
             var newRecord = StubDataForController.InitializeBarData(6, "Hilife Bar & Pub", "Leeds High Street");
             _barService.Setup(x => x.NewBar(newRecord, out statusMessage)).Returns(true);
@@ -91,7 +93,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void SaveNewBarDetails_ValidationFail_BarName_Not_exists_Controller()
+        public void NewBar_ShouldReturnBadRequest_WhenBarNameNotProvided()
         {
             var newRecord = StubDataForController.InitializeBarData(7, "", "London Kings Cross");
             var result = _barController.NewBar(newRecord);

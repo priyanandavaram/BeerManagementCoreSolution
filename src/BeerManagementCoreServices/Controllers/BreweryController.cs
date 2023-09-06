@@ -2,6 +2,7 @@
 using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
+
 namespace BeerManagement.Web
 {
     [ApiController]
@@ -13,6 +14,7 @@ namespace BeerManagement.Web
         {
             _breweryService = breweryService;
         }
+
         [HttpGet]
         [Route("{id:int:min(1)}")]
         public IActionResult BreweryDetailsById(int id)
@@ -53,10 +55,7 @@ namespace BeerManagement.Web
                 }
                 return SendReponse.BadRequestObjectResult(result, statusMessage);
             }
-            else
-            {
-                return SendReponse.BadRequest();
-            }
+            return SendReponse.BadRequest();
         }
 
         [HttpPost]
@@ -71,10 +70,7 @@ namespace BeerManagement.Web
                 }
                 return SendReponse.BadRequestObjectResult(result, statusMessage);
             }
-            else
-            {
-                return SendReponse.BadRequest();
-            }
+            return SendReponse.BadRequest();
         }
 
         private bool ValidateInput(BreweryModel breweryInfo)

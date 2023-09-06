@@ -2,6 +2,7 @@
 using BeerManagement.Services.Interfaces;
 using BeerManagement.Web.Common;
 using Microsoft.AspNetCore.Mvc;
+
 namespace BeerManagement.Web
 {
     [ApiController]
@@ -13,6 +14,7 @@ namespace BeerManagement.Web
         {
             _beerService = beerService;
         }
+
         [HttpGet]
         [Route("{id:int:min(1)}")]
         public IActionResult BeerDetailsById(int id)
@@ -27,13 +29,13 @@ namespace BeerManagement.Web
 
         [HttpGet]
         [Route("{gtAlcoholByVolume}&{ltAlcoholByVolume}")]
-        public IActionResult AllBeersByAlchoholPercentage(decimal gtAlcoholByVolume = 0, decimal ltAlcoholByVolume = 0)
+        public IActionResult AllBeersByAlcoholPercentage(decimal gtAlcoholByVolume = 0, decimal ltAlcoholByVolume = 0)
         {
             if (gtAlcoholByVolume < 0 || ltAlcoholByVolume < 0)
             {
                 return SendReponse.BadRequest();
             }
-            var result = _beerService.AllBeersByAlchoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
+            var result = _beerService.AllBeersByAlcoholPercentage(gtAlcoholByVolume, ltAlcoholByVolume);
             if (result != null)
             {
                 return SendReponse.ApiResponse(result);
@@ -58,10 +60,7 @@ namespace BeerManagement.Web
                 }
                 return SendReponse.BadRequestObjectResult(result, statusMessage);
             }
-            else
-            {
-                return SendReponse.BadRequest();
-            }
+            return SendReponse.BadRequest();
         }
 
         [HttpPost]
@@ -76,10 +75,7 @@ namespace BeerManagement.Web
                 }
                 return SendReponse.BadRequestObjectResult(result, statusMessage);
             }
-            else
-            {
-                return SendReponse.BadRequest();
-            }
+            return SendReponse.BadRequest();
         }
 
         private bool ValidateInput(BeerModel beerInfo)
@@ -88,11 +84,7 @@ namespace BeerManagement.Web
             {
                 return false;
             }
-            else if (string.IsNullOrEmpty(beerInfo.BeerName))
-            {
-                return false;
-            }
-            else if (beerInfo.PercentageAlcoholByVolume < 0)
+            else if (string.IsNullOrEmpty(beerInfo.BeerName) || beerInfo.PercentageAlcoholByVolume < 0)
             {
                 return false;
             }

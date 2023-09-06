@@ -6,6 +6,7 @@ using BeerManagement.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace BeerManagement.Repository.Repository
 {
     public class BreweryAndBeerRepository : IBreweryAndBeerRepository
@@ -17,7 +18,8 @@ namespace BeerManagement.Repository.Repository
             _dbContext = dbContext;
             mapper = autoMapper;
         }
-        public List<BreweryWithAssociatedBeersModel> AllBeersAssociatedWithBrewery(int breweryId)
+
+        public List<BreweryWithAssociatedBeersModel> BeersAssociatedWithBrewery(int breweryId)
         {
             var beersAssociatedWithBrewery = _dbContext.LinkBreweryWithBeer.Include(allLinkedEntities => allLinkedEntities.Beer)
                                                                            .Include(allLinkedEntities => allLinkedEntities.Brewery)
@@ -26,7 +28,7 @@ namespace BeerManagement.Repository.Repository
             return BreweryAndAssociatedBeersInfo(beersAssociatedWithBrewery);
         }
 
-        public List<BreweryWithAssociatedBeersModel> AllBreweriesWithAssociatedBeers()
+        public List<BreweryWithAssociatedBeersModel> BreweriesWithAssociatedBeers()
         {
             var breweryWithAssociatedBeers = _dbContext.LinkBreweryWithBeer.Include(allLinkedEntities => allLinkedEntities.Beer)
                                                                            .Include(allLinkedEntities => allLinkedEntities.Brewery)
@@ -42,7 +44,7 @@ namespace BeerManagement.Repository.Repository
                 {
                     _dbContext.Add(breweryAndBeerInfo);
                     _dbContext.SaveChanges();
-                    statusMessage = "Provided brewery and beer Id is linked successfully";
+                    statusMessage = "Provided brewery and beer Id is linked successfully.";
                     return true;
                 }
                 else
@@ -72,8 +74,8 @@ namespace BeerManagement.Repository.Repository
 
         private bool IsExist(int BreweryId, int beerId)
         {
-            if ((_dbContext.Brewery.Any(breweryAndBeerInfo => breweryAndBeerInfo.BreweryId == BreweryId)) 
-                && (_dbContext.Beers.Any(breweryAndBeerInfo => breweryAndBeerInfo.BeerId == beerId)))
+            if (_dbContext.Brewery.Any(breweryAndBeerInfo => breweryAndBeerInfo.BreweryId == BreweryId)
+                && _dbContext.Beers.Any(breweryAndBeerInfo => breweryAndBeerInfo.BeerId == beerId))
             {
                 return true;
             }
@@ -82,7 +84,7 @@ namespace BeerManagement.Repository.Repository
 
         private bool IsCombinationExist(int BreweryId, int beerId)
         {
-            var exists = _dbContext.LinkBreweryWithBeer.FirstOrDefault(breweryAndBeerInfo => breweryAndBeerInfo.BreweryId == BreweryId 
+            var exists = _dbContext.LinkBreweryWithBeer.FirstOrDefault(breweryAndBeerInfo => breweryAndBeerInfo.BreweryId == BreweryId
                                                                       && breweryAndBeerInfo.BeerId == beerId);
             return exists != null ? true : false;
         }

@@ -5,6 +5,7 @@ using BeerManagement.Repository.Interfaces;
 using BeerManagement.Repository.Models;
 using BeerManagement.Services.Interfaces;
 using System.Collections.Generic;
+
 namespace BeerManagement.Services.Services
 {
     public class BarAndBeerService : IBarAndBeerService
@@ -16,6 +17,7 @@ namespace BeerManagement.Services.Services
             this.unitOfWork = unitOfWork;
             mapper = autoMapper;
         }
+
         public List<BarsWithAssociatedBeersModel> BarsWithAssociatedBeers()
         {
             var allbarsWithAssociatedBeers = unitOfWork.BarAndBeerRepository.BarsWithAssociatedBeers();

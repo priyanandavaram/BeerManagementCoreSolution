@@ -3,6 +3,7 @@ using BeerManagement.Web.Common;
 using BeerManagement.Web.Controllers.Test.TestHelper;
 using Moq;
 using Xunit;
+
 namespace BeerManagement.Web.Controllers.Test
 {
     public class BarAndBeerControllerTest
@@ -15,17 +16,18 @@ namespace BeerManagement.Web.Controllers.Test
             _barAndBeerService = new Mock<IBarAndBeerService>();
             _barAndBeerController = new BarAndBeerController(_barAndBeerService.Object);
         }
+
         [Fact]
-        public void BarAndBeerLink_Success_Controller()
+        public void BarAndBeerLink_LinkedBarWithBeer()
         {
-            var barAndBeer = StubDataForController.BarAndBeerInfo();
-            _barAndBeerService.Setup(x => x.BarAndBeerLink(barAndBeer, out statusMessage)).Returns(true);
-            var result = _barAndBeerController.BarAndBeerLink(barAndBeer);
+            var barAndBeerInfo = StubDataForController.BarAndBeerInfo();
+            _barAndBeerService.Setup(x => x.BarAndBeerLink(barAndBeerInfo, out statusMessage)).Returns(true);
+            var result = _barAndBeerController.BarAndBeerLink(barAndBeerInfo);
             Assert.True(result.GetType().FullName == SendReponse.ApiResponse(result).ToString());
         }
 
         [Fact]
-        public void BeersAssociatedWithBar_ShouldReturnData_Controller()
+        public void BeersAssociatedWithBar_ShouldReturnAllBeersForBarId()
         {
             _barAndBeerService.Setup(x => x.BeersAssociatedWithBar(4)).Returns(StubDataForController.BarsAndBeerDetailsById());
             var barAndAssociatedBeers = _barAndBeerController.BeersAssociatedWithBar(4);
@@ -33,7 +35,7 @@ namespace BeerManagement.Web.Controllers.Test
         }
 
         [Fact]
-        public void BarsWithAssociatedBeers_ShouldReturnData_Controller()
+        public void BarsWithAssociatedBeers_ShouldReturnBarsAndBeersData()
         {
             _barAndBeerService.Setup(x => x.BarsWithAssociatedBeers()).Returns(StubDataForController.BarsAndAssociatedBeers());
             var barsAndAssociatedBeers = _barAndBeerController.BarsWithAssociatedBeers();

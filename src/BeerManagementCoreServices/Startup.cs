@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace BeerManagement.Web
 {
     public class Startup
@@ -18,6 +19,7 @@ namespace BeerManagement.Web
         {
             Configuration = configuration;
         }
+
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {

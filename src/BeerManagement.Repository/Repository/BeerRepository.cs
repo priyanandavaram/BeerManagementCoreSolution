@@ -2,6 +2,7 @@
 using BeerManagement.Repository.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace BeerManagement.Repository.Repository
 {
     public class BeerRepository : IBeerRepository
@@ -11,7 +12,8 @@ namespace BeerManagement.Repository.Repository
         {
             _dbContext = dbContext;
         }
-        public List<Beers> AllBeersByAlchoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
+
+        public List<Beers> AllBeersByAlcoholPercentage(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
         {
             var beersDetailsByAlcoholPercentage = _dbContext.Beers.Where(beerInfo => ((gtAlcoholByVolume != 0
                                                     && (beerInfo.PercentageAlcoholByVolume > gtAlcoholByVolume)) || gtAlcoholByVolume == 0)
